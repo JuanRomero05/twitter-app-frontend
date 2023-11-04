@@ -8,10 +8,13 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'tab-inicial',
+    redirectTo: 'tab-inicial/homePrincipal',
     pathMatch: 'full'
   },
-
+  {
+    path: 'homePrincipal',
+    loadChildren: () => import('./page/home/home.module').then(m => m.HomePageModule)
+  },
   {
     path: 'tab-inicial',
     loadChildren: () => import('./page/tab-inicial/tab-inicial.module').then(m => m.TabInicialPageModule)
