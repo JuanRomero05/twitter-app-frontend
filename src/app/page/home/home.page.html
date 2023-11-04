@@ -22,7 +22,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-segment value="home" mode="md" #segmentcontrol>
+<ion-segment [(ngModel)]="segment" mode="md" #segmentcontrol>
   <ion-segment-button value="home">
     <ion-label>For you</ion-label>
   </ion-segment-button>
@@ -32,6 +32,10 @@
 </ion-segment>
 
 <ion-content>
+  <div [hidden]="segment != 'home'">
+    <app-tweet *ngFor="let tweet of tweets" [tweet]="tweet"></app-tweet>
+  </div>
+
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button>
       <ion-icon name="add-outline" size="large"></ion-icon>
