@@ -1,6 +1,6 @@
 <ion-row class="wrapper">
   <ion-col size="2">
-    <ion-avatar>
+    <ion-avatar class="custom-avatar">
       <ion-img [src]="tweet.img"></ion-img>
     </ion-avatar>
   </ion-col>
@@ -16,7 +16,7 @@
     </ion-row>
     <ion-row>
       <ion-col size="12">
-        <div [innerHtml]="tweet.text"></div>
+        <div class="custom-text" [innerHtml]="tweet.text"></div>
         <img
           class="preview-img"
           [src]="tweet.attachment"
@@ -35,7 +35,7 @@
         <ion-button
           (click)="tweet.retweet = !tweet.retweet"
           fill="clear"
-          [color]="tweet.retweet ? 'primary' : 'medium'"
+          [color]="tweet.retweet ? 'success' : 'medium'"
           size="small"
         >
           <ion-icon name="repeat-outline" slot="start"></ion-icon>
@@ -46,10 +46,13 @@
         <ion-button
           (click)="tweet.liked = !tweet.liked"
           fill="clear"
-          [color]="tweet.liked ? 'primary' : 'medium'"
+          [color]="tweet.liked ? 'danger' : 'medium'"
           size="small"
         >
-          <ion-icon name="heart-outline" slot="start"></ion-icon>
+          <ion-icon
+            [name]="tweet.liked ? 'heart' : 'heart-outline'"
+            slot="start"
+          ></ion-icon>
           {{ tweet.like }}
         </ion-button>
       </ion-col>
