@@ -24,7 +24,9 @@
       </form>
       <br />
 
-      <ion-button shape="round" fill="solid">Login</ion-button>
+      <ion-button (click)="enterApp()" shape="round" fill="solid"
+        >Login</ion-button
+      >
       <br />
       <ion-button shape="round" fill="outline" [routerLink]="['/signup']"
         >Sign Up</ion-button

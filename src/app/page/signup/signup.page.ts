@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 
 @Component({
@@ -11,7 +12,7 @@ export class SignupPage implements OnInit {
 
   signupForm: FormGroup;
 
-  constructor(public fb: FormBuilder, public alertController: AlertController) {
+  constructor(public fb: FormBuilder, public alertController: AlertController, private router: Router) {
 
     this.signupForm = this.fb.group({
       'username': new FormControl("", Validators.required),
@@ -28,7 +29,7 @@ export class SignupPage implements OnInit {
   }
 
   async saveData() {
-    var form = this.signupForm.value;
+    //var form = this.signupForm.value;
 
     if (this.signupForm.invalid) {
       const alert = await this.alertController.create({
@@ -39,16 +40,30 @@ export class SignupPage implements OnInit {
 
       await alert.present();
       return;
-    } //TODO: agregar validacion para que me redirija a login
-    const user = {
+    } else {
+
+      //TODO: Guardar los datos en el back
+
+      const alert = await this.alertController.create({
+        header: 'Success',
+        message: 'Your data has been saved successfully',
+        buttons: ['Ok']
+      })
+
+      await alert.present();
+
+      this.router.navigate(['/login']);
+    }
+
+    /* const user = {
       username: form.username,
       firstName: form.firstName,
       lastName: form.lastName,
       bio: form.bio,
       password: form.password,
-    }
+    } */
 
-    localStorage.setItem('user', JSON.stringify(user));
+    //localStorage.setItem('user', JSON.stringify(user));
   }
 
 }
