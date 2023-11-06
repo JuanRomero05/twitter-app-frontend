@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-signup',
@@ -10,7 +11,7 @@ export class SignupPage implements OnInit {
 
   signupForm: FormGroup;
 
-  constructor(public fb: FormBuilder) {
+  constructor(public fb: FormBuilder, public alertController: AlertController) {
 
     this.signupForm = this.fb.group({
       'username': new FormControl("", Validators.required),
@@ -24,6 +25,30 @@ export class SignupPage implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  async saveData() {
+    var form = this.signupForm.value;
+
+    if (this.signupForm.invalid) {
+      const alert = await this.alertController.create({
+        header: 'Empty fields',
+        message: 'No field can be empty',
+        buttons: ['Ok']
+      })
+
+      await alert.present();
+      return;
+    } //TODO: agregar validacion para que me redirija a login
+    const user = {
+      username: form.username,
+      firstName: form.firstName,
+      lastName: form.lastName,
+      bio: form.bio,
+      password: form.password,
+    }
+
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
 }

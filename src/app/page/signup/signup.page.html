@@ -1,13 +1,58 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>signup</ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Signup</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">signup</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Signup</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <form [formGroup]="signupForm">
+        <ion-item>
+          <ion-label position="floating">Username</ion-label>
+          <ion-input formControlName="username"></ion-input>
+        </ion-item>
+        &nbsp;
+        <ion-item>
+          <ion-label position="floating">First name</ion-label>
+          <ion-input formControlName="firstName"></ion-input>
+        </ion-item>
+        &nbsp;
+        <ion-item>
+          <ion-label position="floating">Last name</ion-label>
+          <ion-input formControlName="lastName"></ion-input>
+        </ion-item>
+        &nbsp;
+        <ion-item>
+          <ion-label position="floating">Add a bio</ion-label>
+          <ion-input formControlName="bio"></ion-input>
+        </ion-item>
+        &nbsp;
+        <ion-item>
+          <ion-label position="floating">Password</ion-label>
+          <ion-input formControlName="password" type="password"></ion-input>
+        </ion-item>
+        &nbsp;
+        <ion-item>
+          <ion-label position="floating">Repeat password</ion-label>
+          <ion-input
+            formControlName="repeatPassword"
+            type="password"
+          ></ion-input>
+        </ion-item>
+      </form>
+      <br />
+
+      <ion-button (click)="saveData()" shape="round" fill="solid"
+        >Submit</ion-button
+      >
+    </ion-card-content>
+  </ion-card>
 </ion-content>
