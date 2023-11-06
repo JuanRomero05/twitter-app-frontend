@@ -6,9 +6,14 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
   },
-  {
+  /* {
     path: '',
     redirectTo: 'tab-inicial/homePrincipal',
+    pathMatch: 'full'
+  }, */
+  {
+    path: '',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
@@ -18,6 +23,14 @@ const routes: Routes = [
   {
     path: 'tab-inicial',
     loadChildren: () => import('./page/tab-inicial/tab-inicial.module').then(m => m.TabInicialPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./page/login/login.module').then(m => m.LoginPageModule)
+  },
+  {
+    path: 'signup',
+    loadChildren: () => import('./page/signup/signup.module').then(m => m.SignupPageModule)
   },
 ];
 
