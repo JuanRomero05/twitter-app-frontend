@@ -1,26 +1,36 @@
-<!-- <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Login</ion-title>
-  </ion-toolbar>
-</ion-header> -->
-
 <ion-content [fullscreen]="true">
-  <!-- Agregar logo de twitter -->
+  <div class="ion-text-center">
+    <ion-icon name="logo-twitter" color="primary" class="logo-size"></ion-icon>
+  </div>
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Login</ion-card-title>
+      <ion-card-title><strong>Login</strong></ion-card-title>
     </ion-card-header>
 
     <ion-card-content>
       <form [formGroup]="loginForm">
         <ion-item>
-          <ion-label position="floating">Username</ion-label>
-          <ion-input formControlName="username"></ion-input>
+          <ion-input
+            formControlName="username"
+            label="Username"
+            labelPlacement="floating"
+          ></ion-input>
         </ion-item>
         &nbsp;
         <ion-item>
-          <ion-label position="floating">Password</ion-label>
-          <ion-input formControlName="password" type="password"></ion-input>
+          <ion-input
+            #pwInput
+            formControlName="password"
+            type="password"
+            label="Password"
+            labelPlacement="floating"
+          >
+          </ion-input>
+          <ion-icon
+            [name]="eyeIcon"
+            slot="end"
+            (click)="togglePasswordVisibility()"
+          ></ion-icon>
         </ion-item>
       </form>
       <br />

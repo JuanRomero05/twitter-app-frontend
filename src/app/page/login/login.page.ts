@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
@@ -22,6 +22,19 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  @ViewChild('pwInput') passwordInput: any;
+
+  // Variables para realizar el seguimiento del estado de visibilidad del password e icon
+  showPassword: boolean = false;
+  eyeIcon: string = 'eye-outline';
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+    this.passwordInput.type = this.showPassword ? 'text' : 'password';
+    this.eyeIcon = this.showPassword ? 'eye-off' : 'eye-outline';
+
   }
 
   async enterApp() {
