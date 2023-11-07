@@ -1,10 +1,11 @@
-<ion-header [translucent]="true">
+<!-- <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Login</ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
 <ion-content [fullscreen]="true">
+  <!-- Agregar logo de twitter -->
   <ion-card>
     <ion-card-header>
       <ion-card-title>Login</ion-card-title>
@@ -24,13 +25,23 @@
       </form>
       <br />
 
-      <ion-button (click)="enterApp()" shape="round" fill="solid"
-        >Login</ion-button
-      >
-      <br />
-      <ion-button shape="round" fill="outline" [routerLink]="['/signup']"
-        >Sign Up</ion-button
-      >
+      <div class="ion-text-center">
+        <ion-button
+          class="btn-width"
+          (click)="enterApp()"
+          shape="round"
+          fill="solid"
+          >Login</ion-button
+        >
+        <br />
+        <ion-button
+          class="btn-width"
+          shape="round"
+          fill="outline"
+          [routerLink]="['/signup']"
+          >Sign Up</ion-button
+        >
+      </div>
     </ion-card-content>
   </ion-card>
 </ion-content>

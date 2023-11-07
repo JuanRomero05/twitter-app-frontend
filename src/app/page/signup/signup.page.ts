@@ -52,7 +52,10 @@ export class SignupPage implements OnInit {
 
       await alert.present();
 
-      this.router.navigate(['/login']);
+      alert.onDidDismiss().then(() => {
+        this.router.navigate(['login']);
+      });
+
     }
 
     /* const user = {
