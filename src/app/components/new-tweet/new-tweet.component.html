@@ -4,12 +4,17 @@
       <ion-header>
         <ion-toolbar>
           <ion-buttons slot="start">
-            <ion-button (click)="setOpen(false)">
+            <ion-button (click)="setOpen(true)">
               <ion-icon name="close" size="large"></ion-icon>
             </ion-button>
           </ion-buttons>
           <ion-buttons slot="end">
-            <ion-button shape="round" fill="solid" color="primary"
+            <ion-button
+              shape="round"
+              fill="solid"
+              color="primary"
+              class="btn-width"
+              [disabled]="!newTweetForm.get('newTweet')?.value"
               >Post</ion-button
             >
           </ion-buttons>
