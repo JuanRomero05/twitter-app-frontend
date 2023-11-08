@@ -11,6 +11,8 @@ export class HomePage implements OnInit {
 
   tweets = [];
 
+  showNewTweet = false;
+
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
@@ -18,6 +20,10 @@ export class HomePage implements OnInit {
       console.log('tweets: ', data.tweets);
       this.tweets = data.tweets;
     })
+  }
+
+  openNewTweet() {
+    this.showNewTweet = true;
   }
 
 }

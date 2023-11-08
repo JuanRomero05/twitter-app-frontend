@@ -1,0 +1,44 @@
+<ion-content class="ion-padding">
+  <ion-modal [isOpen]="isModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="setOpen(false)">
+              <ion-icon name="close" size="large"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-buttons slot="end">
+            <ion-button shape="round" fill="solid" color="primary"
+              >Post</ion-button
+            >
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form [formGroup]="newTweetForm">
+          <ion-item>
+            <div class="icons-container">
+              <ion-icon
+                name="camera-outline"
+                color="primary"
+                class="iconCamera"
+              ></ion-icon>
+              <ion-icon
+                name="images-outline"
+                color="primary"
+                class="iconImages"
+              ></ion-icon>
+            </div>
+            <ion-textarea
+              formControlName="newTweet"
+              placeholder="What's happening?"
+              [counter]="true"
+              maxlength="280"
+            ></ion-textarea>
+          </ion-item>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>
