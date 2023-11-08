@@ -1,13 +1,25 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>profile</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-segment mode="md" #segmentcontrol>
+  <ion-segment-button value="home">
+    <ion-label>For you</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="content">
+    <ion-label>Following</ion-label>
+  </ion-segment-button>
+</ion-segment>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">profile</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div [hidden]="segment != 'home'">
+    <app-tweet *ngFor="let tweet of tweets" [tweet]="tweet"></app-tweet>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openNewTweet()">
+      <ion-fab-content>
+        <ion-icon name="add-outline" size="large"> </ion-icon>
+      </ion-fab-content>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- Este componente se mostrará unicamente cuando shoNewTweet cambie a true -->
+  <app-new-tweet *ngIf="showNewTweet"></app-new-tweet>
 </ion-content>
