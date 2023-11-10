@@ -9,6 +9,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 import { TweetComponent } from 'src/app/components/tweet/tweet.component';
 import { NewTweetComponent } from 'src/app/components/new-tweet/new-tweet.component';
+import { SharedComponentsModule } from 'src/app/components/shared-components.module';
 
 @NgModule({
   imports: [
@@ -16,9 +17,10 @@ import { NewTweetComponent } from 'src/app/components/new-tweet/new-tweet.compon
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
+    SharedComponentsModule
   ],
-  declarations: [HomePage, TweetComponent, NewTweetComponent],
+  declarations: [HomePage/* , TweetComponent, NewTweetComponent */],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ]
