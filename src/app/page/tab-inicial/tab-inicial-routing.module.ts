@@ -17,10 +17,6 @@ const routes: Routes = [
         loadChildren: () => import('./../../page/search/search.module').then(m => m.SearchPageModule)
       },
       {
-        path: 'notifications',
-        loadChildren: () => import('./../../page/notifications/notifications.module').then(m => m.NotificationsPageModule)
-      },
-      {
         path: 'profile',
         loadChildren: () => import('./../../page/profile/profile.module').then(m => m.ProfilePageModule)
       },
