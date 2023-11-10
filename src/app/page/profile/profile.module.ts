@@ -7,8 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { ProfilePageRoutingModule } from './profile-routing.module';
 
 import { ProfilePage } from './profile.page';
-import { TweetComponent } from 'src/app/components/tweet/tweet.component';
-import { NewTweetComponent } from 'src/app/components/new-tweet/new-tweet.component';
+/*import { TweetComponent } from 'src/app/components/tweet/tweet.component';
+import { NewTweetComponent } from 'src/app/components/new-tweet/new-tweet.component';*/
 
 @NgModule({
   imports: [
@@ -17,7 +17,7 @@ import { NewTweetComponent } from 'src/app/components/new-tweet/new-tweet.compon
     IonicModule,
     ProfilePageRoutingModule
   ],
-  declarations: [ProfilePage, TweetComponent, NewTweetComponent],
+  declarations: [ProfilePage/*, TweetComponent, NewTweetComponent*/],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ]
