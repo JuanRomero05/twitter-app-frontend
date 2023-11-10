@@ -90,8 +90,6 @@ export class SignupPage implements OnInit {
 
     const form = this.signupForm.value;
     const url = 'https://twitter-api-awdc.onrender.com/api/auth/signup'
-    let headers = new HttpHeaders()
-    headers = headers.append('Content-Type', 'application/json')
     const body = {
       alias: form.username,
       first_name: form.firstName,
@@ -100,7 +98,7 @@ export class SignupPage implements OnInit {
       biography: form.bio
     }
 
-    this.http.post(url, body, { headers })
+    this.http.post(url, body)
       .subscribe(async () => {
         const alert = await this.createAlert('Success', 'You have been successfully registered.')
     

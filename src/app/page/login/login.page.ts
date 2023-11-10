@@ -63,22 +63,23 @@ export class LoginPage implements OnInit {
 
     const form = this.loginForm.value;
     const url = 'https://twitter-api-awdc.onrender.com/api/auth/login'
-    let headers = new HttpHeaders()
-    headers = headers.append('Content-Type', 'application/json')
     const body = {
       alias: form.username,
       password: form.password
     }
 
-    this.http.post(url, body, { headers })
+    this.http.post(url, body)
       .subscribe(async (data: any) => {
         const { token } = data
 
         // se obtiene el id del usuario y se guarda junto con el token en almacenamiento local
         const url2 = 'https://twitter-api-awdc.onrender.com/api/users/me'
 
-        headers = headers.append('Authorization', `Bearer ${token}`)
-        
+        const headers = new HttpHeaders().append(
+          'Authorization', 
+          `Bearer ${token}`
+        )
+
         this.http.get(url2, { headers })
           .subscribe(async (data: any) => {
             await Preferences.set({ key: "token", value: token })
