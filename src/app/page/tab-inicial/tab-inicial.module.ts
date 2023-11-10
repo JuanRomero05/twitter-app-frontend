@@ -17,4 +17,4 @@ import { TabInicialPage } from './tab-inicial.page';
   ],
   declarations: [TabInicialPage]
 })
-export class TabInicialPageModule {}
+export class TabInicialPageModule { }

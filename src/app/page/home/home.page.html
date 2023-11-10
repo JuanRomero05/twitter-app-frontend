@@ -6,15 +6,14 @@
   </ion-toolbar>
 </ion-header>
 
-
-<ion-segment>
+<ion-segment [(ngModel)]="segment">
   <ion-segment-button value="home">
     <ion-label>For you</ion-label>
   </ion-segment-button>
 </ion-segment>
 
 <ion-content>
-  <div >
+  <div>
     <app-tweet *ngFor="let tweet of tweets" [tweet]="tweet"></app-tweet>
   </div>
 

@@ -18,7 +18,7 @@ import { NewTweetComponent } from 'src/app/components/new-tweet/new-tweet.compon
     IonicModule,
     HomePageRoutingModule
   ],
-  declarations: [HomePage, TweetComponent, NewTweetComponent],
+  declarations: [HomePage/* , TweetComponent, NewTweetComponent */],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ]
