@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 @Component({
   selector: 'app-signup',
@@ -16,7 +17,8 @@ export class SignupPage implements OnInit {
   constructor(
     public fb: FormBuilder,
     public alertController: AlertController,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {
 
     this.signupForm = this.fb.group({
@@ -70,8 +72,6 @@ export class SignupPage implements OnInit {
   }
 
   async saveData() {
-    //var form = this.signupForm.value;
-
     if (this.signupForm.invalid) {
       const alert = await this.alertController.create({
         header: 'Empty fields',
@@ -81,33 +81,43 @@ export class SignupPage implements OnInit {
 
       await alert.present();
       return;
-    } else {
+    } 
 
-      //TODO: Guardar los datos en el back
+    //TODO: Guardar los datos en el back
+    const form = this.signupForm.value;
 
-      const alert = await this.alertController.create({
-        header: 'Success',
-        message: 'Your data has been saved successfully',
-        buttons: ['Ok']
-      })
+    const url = 'https://twitter-api-awdc.onrender.com/api/auth/signup'
+    
+    const headers = new HttpHeaders()
+    headers.append('Content-Type', 'application/json')
 
-      await alert.present();
-
-      alert.onDidDismiss().then(() => {
-        this.router.navigate(['login']);
-      });
-
+    const body = {
+      alias: form.username,
+      first_name: form.firstName,
+      last_name: form.lastName,
+      password: form.password,
+      biography: form.bio
     }
 
-    /* const user = {
-      username: form.username,
-      firstName: form.firstName,
-      lastName: form.lastName,
-      bio: form.bio,
-      password: form.password,
-    } */
+    this.http.post(url, body, { headers })
+      .subscribe((data: any) => {
+        console.log(data)
+    }, (error: any) => {
+      console.log(error)
+    }, () => {
+      console.log('Final.')
+    })
 
-    //localStorage.setItem('user', JSON.stringify(user));
+    const alert = await this.alertController.create({
+      header: 'Success',
+      message: 'Your data has been saved successfully',
+      buttons: ['Ok']
+    })
+
+    await alert.present();
+
+    alert.onDidDismiss().then(() => {
+      this.router.navigate(['login']);
+    });
   }
-
 }
