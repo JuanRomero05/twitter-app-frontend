@@ -24,7 +24,7 @@ export class HomePage implements OnInit {
       'Authorization', 
       `Bearer ${token.value}`
     )
-
+    
     this.http.get(url, { headers })
       .subscribe((data: any) => {
         console.log(data);

@@ -28,7 +28,8 @@ export class LoginPage implements OnInit {
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.verifyPersistence()
   }
 
   @ViewChild('pwInput') passwordInput: any;
@@ -36,6 +37,28 @@ export class LoginPage implements OnInit {
   // Variables para realizar el seguimiento del estado de visibilidad del password e icon
   showPassword: boolean = false;
   eyeIcon: string = 'eye-outline';
+
+  verifyPersistence = async () => {
+    const token = await Preferences.get({ key: 'token' })
+    const id = await Preferences.get({ key: 'id' })
+
+    if (!(token.value && id.value)) 
+      return 
+    
+    const url2 = 'https://twitter-api-awdc.onrender.com/api/users/me'
+
+    const headers = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
+
+    // verifica si los datos contenidos pertencen realmente a un usuario
+    this.http.get(url2, { headers })
+      .subscribe(async (data: any) => {
+        this.router.navigate(['/tab-inicial/homePrincipal'])
+
+      }, async (err: any) => {
+        await Preferences.remove({ key: 'token' })
+        await Preferences.remove({ key: 'id' })
+      })
+  }
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
@@ -75,10 +98,7 @@ export class LoginPage implements OnInit {
         // se obtiene el id del usuario y se guarda junto con el token en almacenamiento local
         const url2 = 'https://twitter-api-awdc.onrender.com/api/users/me'
 
-        const headers = new HttpHeaders().append(
-          'Authorization', 
-          `Bearer ${token}`
-        )
+        const headers = new HttpHeaders().append('Authorization', `Bearer ${token}`)
 
         this.http.get(url2, { headers })
           .subscribe(async (data: any) => {
