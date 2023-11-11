@@ -1,14 +1,24 @@
+<ion-header #header>
+  <ion-toolbar>
+    <ion-label class="profile-label">Juan Romero</ion-label>
+    <ion-button slot="end" shape="round" fill="outline" color="dark">
+      Edit profile
+    </ion-button>
+    <ion-label class="profile-label">@juan_romero5</ion-label>
+  </ion-toolbar>
+</ion-header>
+
 <ion-segment [(ngModel)]="segment">
-  <ion-segment-button value="home">
+  <ion-segment-button value="posts">
     <ion-label>Posts</ion-label>
   </ion-segment-button>
-  <ion-segment-button value="content">
+  <ion-segment-button value="likes">
     <ion-label>Likes</ion-label>
   </ion-segment-button>
 </ion-segment>
 
 <ion-content>
-  <div [hidden]="segment != 'home'">
+  <div [hidden]="segment != 'posts'">
     <app-tweet *ngFor="let tweet of tweets" [tweet]="tweet"></app-tweet>
   </div>
 

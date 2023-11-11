@@ -1,0 +1,14 @@
+.profile-label {
+     display: flex;
+     flex-direction: column;
+     margin-left: 5px;
+     margin-top: 10px;
+     margin-bottom: 10px;
+     /* text-align: center; */
+}
+   
+.profile-label:first-of-type {
+     margin-left: 5px;
+     margin-top: 10px;
+     margin-bottom: 10px; /* Adjust the margin as needed */
+}

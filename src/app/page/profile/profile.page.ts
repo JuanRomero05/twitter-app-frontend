@@ -7,7 +7,7 @@ import { HttpClient } from "@angular/common/http";
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit {
-  segment: String = 'home';
+  segment: String = 'posts';
 
   tweets = [];
 
