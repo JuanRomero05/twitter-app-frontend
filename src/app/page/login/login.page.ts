@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { Preferences } from '@capacitor/preferences';
+import { environment as env } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -44,13 +45,11 @@ export class LoginPage implements OnInit {
 
     if (!(token.value && id.value)) 
       return 
-    
-    const url2 = 'https://twitter-api-awdc.onrender.com/api/users/me'
 
     const headers = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
 
     // verifica si los datos contenidos pertencen realmente a un usuario
-    this.http.get(url2, { headers })
+    this.http.get(env.api+'users/me', { headers })
       .subscribe(async (data: any) => {
         this.router.navigate(['/tab-inicial/homePrincipal'])
 
@@ -85,22 +84,19 @@ export class LoginPage implements OnInit {
     }
 
     const form = this.loginForm.value;
-    const url = 'https://twitter-api-awdc.onrender.com/api/auth/login'
     const body = {
       alias: form.username,
       password: form.password
     }
 
-    this.http.post(url, body)
+    this.http.post(env.api+'auth/login', body)
       .subscribe(async (data: any) => {
         const { token } = data
 
         // se obtiene el id del usuario y se guarda junto con el token en almacenamiento local
-        const url2 = 'https://twitter-api-awdc.onrender.com/api/users/me'
-
         const headers = new HttpHeaders().append('Authorization', `Bearer ${token}`)
 
-        this.http.get(url2, { headers })
+        this.http.get(env.api+'users/me', { headers })
           .subscribe(async (data: any) => {
             await Preferences.set({ key: "token", value: token })
             await Preferences.set({ key: 'id', value: data.user_id })

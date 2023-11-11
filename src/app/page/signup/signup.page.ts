@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { environment as env } from 'src/environments/environment';
 
 @Component({
   selector: 'app-signup',
@@ -89,7 +90,6 @@ export class SignupPage implements OnInit {
     } 
 
     const form = this.signupForm.value;
-    const url = 'https://twitter-api-awdc.onrender.com/api/auth/signup'
     const body = {
       alias: form.username,
       first_name: form.firstName,
@@ -98,7 +98,7 @@ export class SignupPage implements OnInit {
       biography: form.bio
     }
 
-    this.http.post(url, body)
+    this.http.post(env.api+'auth/signup', body)
       .subscribe(async () => {
         const alert = await this.createAlert('Success', 'You have been successfully registered.')
     
