@@ -23,7 +23,7 @@ export class HomePage implements OnInit {
     
     this.http.get(env.api+'tweets?offset=0&limit=10', { headers })
       .subscribe((data: any) => {
-        console.log(data);
+        this.tweets = data
     })
   }
 

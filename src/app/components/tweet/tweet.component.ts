@@ -1,5 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ViewEncapsulation } from "@angular/core";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment as env } from 'src/environments/environment';
+import { Preferences } from '@capacitor/preferences';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tweet',
@@ -11,16 +15,48 @@ export class TweetComponent implements OnInit {
 
   @Input() tweet: any;
 
-  constructor() { }
+  constructor(
+    public alertController: AlertController, 
+    private http: HttpClient
+  ) { }
 
   ngOnInit() {
-    console.log('one tweet: ', this.tweet);
     this.parseTweet();
   }
 
   parseTweet() {
-    this.tweet.text = this.tweet.text.replace(/#[a-zA-Z]+/g, "<span>$&</span>");
-    this.tweet.text = this.tweet.text.replace(/@[a-zA-Z]+/g, "<span>$&</span>");
+    this.tweet.text = this.tweet.post_content.replace(/#[a-zA-Z]+/g, "<span>$&</span>");
+    this.tweet.text = this.tweet.post_content.replace(/@[a-zA-Z]+/g, "<span>$&</span>");
+  }
+
+  createAlert = async (header: string, message: string) => {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ['Ok']
+    });
+
+    return alert
+  }
+
+  handleLike = async (tweet: any) => {
+    tweet.liked = !tweet.liked
+
+    // se agrega o se elimina el like en la bd
+    const token = await Preferences.get({ key: 'token' })
+    const id = await Preferences.get({ key: 'id' })
+    const headers = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
+    const body = { user_id: id.value, post_id: tweet.post_id }
+
+    this.http.post(env.api+'/likes', body, { headers: headers})
+      .subscribe(() => {
+        if (tweet.liked)
+          tweet.post_likes++
+        else
+          tweet.post_likes-- 
+      }, (err) => {
+        const alert = this.createAlert('Failure', err.error.msg)
+      })
   }
 
 }
