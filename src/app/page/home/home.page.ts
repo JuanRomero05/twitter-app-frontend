@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Preferences } from '@capacitor/preferences';
-
+import { environment as env } from 'src/environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -18,14 +18,10 @@ export class HomePage implements OnInit {
   constructor(private http: HttpClient) { }
 
   async ngOnInit() {
-    const url = 'https://twitter-api-awdc.onrender.com/api/tweets?offset=0&limit=10'
     const token = await Preferences.get({ key: 'token' })
-    const headers = new HttpHeaders().append(
-      'Authorization', 
-      `Bearer ${token.value}`
-    )
+    const headers = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
     
-    this.http.get(url, { headers })
+    this.http.get(env.api+'tweets?offset=0&limit=10', { headers })
       .subscribe((data: any) => {
         console.log(data);
     })
