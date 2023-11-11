@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { environment as env } from 'src/environments/environment';
 
 @Component({
   selector: 'app-signup',
@@ -71,26 +72,24 @@ export class SignupPage implements OnInit {
     }
   }
 
+  createAlert = async (header: string, message: string) => {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ['Ok']
+    });
+
+    return alert
+  }
+
   async saveData() {
     if (this.signupForm.invalid) {
-      const alert = await this.alertController.create({
-        header: 'Empty fields',
-        message: 'No field can be empty',
-        buttons: ['Ok']
-      })
-
+      const alert = await this.createAlert('Empty fields', 'No field can be empty.')
       await alert.present();
       return;
     } 
 
-    //TODO: Guardar los datos en el back
     const form = this.signupForm.value;
-
-    const url = 'https://twitter-api-awdc.onrender.com/api/auth/signup'
-    
-    const headers = new HttpHeaders()
-    headers.append('Content-Type', 'application/json')
-
     const body = {
       alias: form.username,
       first_name: form.firstName,
@@ -99,25 +98,19 @@ export class SignupPage implements OnInit {
       biography: form.bio
     }
 
-    this.http.post(url, body, { headers })
-      .subscribe((data: any) => {
-        console.log(data)
-    }, (error: any) => {
-      console.log(error)
-    }, () => {
-      console.log('Final.')
+    this.http.post(env.api+'auth/signup', body)
+      .subscribe(async () => {
+        const alert = await this.createAlert('Success', 'You have been successfully registered.')
+    
+        await alert.present();
+    
+        alert.onDidDismiss().then(() => {
+          this.router.navigate(['login']);
+        });
+
+    }, async (err: any) => {
+      const alert = await this.createAlert('Failure', err.error.msg)
+      await alert.present();
     })
-
-    const alert = await this.alertController.create({
-      header: 'Success',
-      message: 'Your data has been saved successfully',
-      buttons: ['Ok']
-    })
-
-    await alert.present();
-
-    alert.onDidDismiss().then(() => {
-      this.router.navigate(['login']);
-    });
   }
 }

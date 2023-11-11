@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Preferences } from '@capacitor/preferences';
 
 
 @Component({
@@ -16,10 +17,17 @@ export class HomePage implements OnInit {
 
   constructor(private http: HttpClient) { }
 
-  ngOnInit() {
-    this.http.get('https://devdactic.fra1.digitaloceanspaces.com/twitter-ui/tweets.json').subscribe((data: any) => {
-      console.log('tweets: ', data.tweets);
-      this.tweets = data.tweets;
+  async ngOnInit() {
+    const url = 'https://twitter-api-awdc.onrender.com/api/tweets?offset=0&limit=10'
+    const token = await Preferences.get({ key: 'token' })
+    const headers = new HttpHeaders().append(
+      'Authorization', 
+      `Bearer ${token.value}`
+    )
+    
+    this.http.get(url, { headers })
+      .subscribe((data: any) => {
+        console.log(data);
     })
   }
 
