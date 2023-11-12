@@ -1,74 +1,164 @@
-<ion-header #header>
+<ion-header>
   <ion-toolbar>
-    <ion-button slot="end" shape="round" fill="outline" color="dark">
-      Edit profile
-    </ion-button>
-    <div class="ion-padding">
-      <div class="profile-label">
-        <ion-label class="handle-title">Juan Romero</ion-label>
-        <ion-label class="handle">@juan_romero5</ion-label>
-      </div>
-      <ion-text class="profile-label handle"
-        >Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus
-        mollitia ratione quos quas doloremque odio qui vero, iusto, magni
-        recusandae modi illo aut optio, ea dolorem numquam pariatur nostrum
-        aperiam!</ion-text
-      >
-      <div class="profile-statistics">
-        <ion-button id="open-modal" fill="clear" color="dark">
-          <ion-label>3</ion-label>
-          <ion-label class="handle">Following</ion-label>
-        </ion-button>
-        <ion-button fill="clear" color="dark">
-          <ion-label style="padding-left: 1px">0</ion-label>
-          <ion-label class="handle">Followers</ion-label>
-        </ion-button>
-      </div>
-    </div>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-segment [(ngModel)]="segment">
-  <ion-segment-button value="posts">
-    <ion-label>Posts</ion-label>
-  </ion-segment-button>
-  <ion-segment-button value="likes">
-    <ion-label>Likes</ion-label>
-  </ion-segment-button>
-</ion-segment>
+<ion-menu side="end" contentId="main-content">
+  <ion-content class="ion-padding">
+    <ion-buttons>
+      <ion-button
+        id="open-edit-profile"
+        shape="round"
+        fill="clear"
+        color="dark"
+        expand="full"
+      >
+        Edit profile
+        <ion-icon name="create-outline" slot="end"></ion-icon>
+      </ion-button>
+    </ion-buttons>
 
-<ion-content>
-  <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-buttons slot="start">
-            <ion-button (click)="cancel()">Cancel</ion-button>
-          </ion-buttons>
-          <ion-title>Welcome</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <ion-label>a</ion-label>
-      </ion-content>
-    </ng-template>
-  </ion-modal>
+    <ion-buttons>
+      <ion-button
+        (click)="logOut()"
+        shape="round"
+        fill="clear"
+        color="danger"
+        expand="full"
+      >
+        Log Out
+        <ion-icon name="log-out-outline" slot="end"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-content>
+</ion-menu>
 
-  <div [hidden]="segment != 'posts'">
-    <app-tweet *ngFor="let tweet of tweets" [tweet]="tweet"></app-tweet>
+<div class="ion-page" id="main-content">
+  <div class="ion-padding">
+    <div class="profile-label">
+      <ion-label class="handle-title">Juan Jose Romero Zabala</ion-label>
+      <ion-label class="handle">@juan_romero5</ion-label>
+    </div>
+    <ion-text class="profile-bio handle"
+      >Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus
+      mollitia ratione quos quas doloremque odio qui vero, iusto, magni
+      recusandae modi illo aut optio, ea dolorem numquam pariatur nostrum
+      aperiam!</ion-text
+    >
+  </div>
+  <div>
+    <ion-button id="open-modal-following" fill="clear" color="dark">
+      <ion-label class="padding-numbers">30</ion-label>
+      <ion-label class="handle">Following</ion-label>
+    </ion-button>
+    <ion-button id="open-modal-followers" fill="clear" color="dark">
+      <ion-label class="padding-numbers">10</ion-label>
+      <ion-label class="handle">Followers</ion-label>
+    </ion-button>
   </div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="openNewTweet()">
-      <ion-fab-content>
-        <ion-icon name="add-outline" size="large"> </ion-icon>
-      </ion-fab-content>
-    </ion-fab-button>
-  </ion-fab>
+  <ion-segment [(ngModel)]="segment">
+    <ion-segment-button value="posts">
+      <ion-label>Posts</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="replies">
+      <ion-label>Replies</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="likes">
+      <ion-label>Likes</ion-label>
+    </ion-segment-button>
+  </ion-segment>
 
-  <!-- Este componente se mostrará unicamente cuando shoNewTweet cambie a true -->
-  <app-new-tweet *ngIf="showNewTweet"></app-new-tweet>
-</ion-content>
+  <ion-content>
+    <ion-modal trigger="open-modal-following">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-icon
+                name="arrow-back-outline"
+                (click)="cancelModalFollowing()"
+                class="handle-back-button"
+                size="small"
+              ></ion-icon>
+            </ion-buttons>
+            <ion-title>Following</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <ion-label>Following</ion-label>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+
+    <ion-modal #followersModal trigger="open-modal-followers">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-icon
+                name="arrow-back-outline"
+                (click)="cancelModalFollowers()"
+                class="handle-back-button"
+                size="small"
+              ></ion-icon>
+            </ion-buttons>
+            <ion-title>Followers</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <ion-label>Followers</ion-label>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+
+    <ion-modal #editProfileModal trigger="open-edit-profile">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-icon
+                name="arrow-back-outline"
+                (click)="cancelEditProfile()"
+                class="handle-back-button"
+                size="small"
+              ></ion-icon>
+            </ion-buttons>
+            <ion-buttons slot="end">
+              <ion-button
+                shape="round"
+                fill="solid"
+                color="dark"
+                class="btn-width"
+                [strong]="true"
+                >Save</ion-button
+              >
+            </ion-buttons>
+            <ion-title>Edit profile</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <ion-label>Edit profile</ion-label>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+
+    <div [hidden]="segment != 'posts'">
+      <app-tweet *ngFor="let tweet of tweets" [tweet]="tweet"></app-tweet>
+    </div>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button (click)="openNewTweet()">
+        <ion-fab-content>
+          <ion-icon name="add-outline" size="large"> </ion-icon>
+        </ion-fab-content>
+      </ion-fab-button>
+    </ion-fab>
+
+    <!-- Este componente se mostrará unicamente cuando shoNewTweet cambie a true -->
+    <app-new-tweet *ngIf="showNewTweet"></app-new-tweet>
+  </ion-content>
+</div>

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { OverlayEventDetail } from '@ionic/core/components';
 import { IonModal } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-profile',
@@ -10,36 +10,24 @@ import { IonModal } from '@ionic/angular';
 })
 export class ProfilePage implements OnInit {
 
-
-  constructor(private http: HttpClient) {
-    this.modal = null as any
+  constructor(
+    private http: HttpClient,
+    public alertController: AlertController
+  ) {
+    this.modalFollowing = null as any
+    this.modalFollowers = null as any
+    this.modalEditProfile = null as any
   }
 
-  @ViewChild(IonModal) modal: IonModal;
-
-  message = 'This modal example uses triggers to automatically open a modal when the button is clicked.';
-
-  cancel() {
-    this.modal.dismiss(null, 'cancel');
-  }
-
-  confirm() {
-    this.modal.dismiss(null, 'confirm');
-  }
-
-  onWillDismiss(event: Event) {
-    const ev = event as CustomEvent<OverlayEventDetail<string>>;
-    if (ev.detail.role === 'confirm') {
-      this.message = `Hello, ${ev.detail.data}!`;
-    }
-  }
+  @ViewChild(IonModal) modalFollowing: IonModal;
+  @ViewChild('followersModal') modalFollowers: IonModal;
+  @ViewChild('editProfileModal') modalEditProfile: IonModal;
 
   segment: String = 'posts';
 
   tweets = [];
 
   showNewTweet = false;
-
 
   ngOnInit() {
     this.http.get('https://devdactic.fra1.digitaloceanspaces.com/twitter-ui/tweets.json').subscribe((data: any) => {
@@ -48,8 +36,45 @@ export class ProfilePage implements OnInit {
     })
   }
 
+  cancelModalFollowing() {
+    this.modalFollowing.dismiss(null, 'cancel');
+  }
+
+  cancelModalFollowers() {
+    this.modalFollowers.dismiss(null, 'cancel');
+  }
+
+  cancelEditProfile() {
+    this.modalEditProfile.dismiss(null, 'cancel');
+  }
+
   openNewTweet() {
     this.showNewTweet = true;
+  }
+
+  createAlert = async (header: string, message: string) => {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: [
+        {
+          text: 'Confirm',
+          handler: () => {
+            //TODO: Agregar logica para cerrar la sesion
+            console.log('User confirm logOut');
+          }
+        },
+        'Cancel'
+      ]
+    });
+
+    return alert;
+  }
+
+  async logOut() {
+    const alert = await this.createAlert('Log Out?', 'Are you sure you want to log out?')
+    await alert.present();
+    return;
   }
 
 }

@@ -3,7 +3,13 @@
      flex-direction: column;
      /* margin-left: 5px; */
      /* margin-top: 10px; */
+     margin-top: 50px;
      margin-bottom: 10px;
+}
+
+.profile-bio {
+     display: flex;
+     flex-direction: column;
 }
 
 .profile-statistics {
@@ -18,8 +24,20 @@
 }
 
 .handle-title {
-     font-size: xx-large;
+     font-size: x-large;
      font-weight: bold;
+}
+
+.handle-back-button {
+     margin-left: 15px;
+}
+
+.padding-numbers {
+     padding-right: 3px;
+}
+
+.btn-width{
+     width: 80px;
 }
 
    
