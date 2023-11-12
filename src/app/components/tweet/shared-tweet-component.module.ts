@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+/* import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TweetComponent } from './tweet.component';
 
@@ -13,3 +13,4 @@ import { TweetComponent } from './tweet.component';
   ]
 })
 export class SharedTweetComponentModule { }
+ */

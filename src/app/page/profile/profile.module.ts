@@ -7,11 +7,11 @@ import { IonicModule } from '@ionic/angular';
 import { ProfilePageRoutingModule } from './profile-routing.module';
 
 import { ProfilePage } from './profile.page';
-import { SharedTweetComponentModule } from 'src/app/components/tweet/shared-tweet-component.module';
+//import { SharedTweetComponentModule } from 'src/app/components/tweet/shared-tweet-component.module';
 //import { SharedNewTweetComponentModule } from 'src/app/components/new-tweet/shared-new-tweet-component.module';
-//import { SharedComponentsModule } from 'src/app/components/shared-components.module';
+import { SharedComponentsModule } from 'src/app/components/shared-components.module';
 //import { TweetComponent } from 'src/app/components/tweet/tweet.component';
-//import { NewTweetComponent } from 'src/app/components/new-tweet/new-tweet.component';
+import { NewTweetComponent } from 'src/app/components/new-tweet/new-tweet.component';
 
 @NgModule({
   imports: [
@@ -20,11 +20,11 @@ import { SharedTweetComponentModule } from 'src/app/components/tweet/shared-twee
     ReactiveFormsModule,
     IonicModule,
     ProfilePageRoutingModule,
-    SharedTweetComponentModule
+    SharedComponentsModule
+    //SharedTweetComponentModule
     //SharedNewTweetComponentModule,
-    /* SharedComponentsModule */
   ],
-  declarations: [ProfilePage/* , TweetComponent, NewTweetComponent */],
+  declarations: [ProfilePage/* , TweetComponent*/, NewTweetComponent],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ]
