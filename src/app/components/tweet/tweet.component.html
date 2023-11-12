@@ -7,20 +7,20 @@
   <ion-col size="10">
     <ion-row class="tweet-info">
       <ion-col size="12">
-        <span class="name">{{ tweet.username }}</span>
-        <span class="handle">@{{ tweet.handle }}</span>
+        <span class="name">{{ tweet.first_name }} {{ tweet.last_name }}</span>
+        <span class="handle">@{{ tweet.alias }}</span>
         <span class="handle"
-          >- {{ tweet.date * 1000 | date : "shortDate" }}</span
+          >- {{ -1 }}</span
         >
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col size="12">
-        <div class="custom-text" [innerHtml]="tweet.text"></div>
+        <div class="custom-text" [innerHtml]="tweet.post_content"></div>
         <img
           class="preview-img"
-          [src]="tweet.attachment"
-          *ngIf="tweet.attachment"
+          [src]="tweet.image_url"
+          *ngIf="tweet.image_url"
         />
       </ion-col>
     </ion-row>
@@ -28,9 +28,10 @@
       <ion-col>
         <ion-button fill="clear" color="medium" size="small">
           <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
-          {{ tweet.response }}
+          {{ -1 }}
         </ion-button>
       </ion-col>
+      <!--
       <ion-col>
         <ion-button
           (click)="tweet.retweet = !tweet.retweet"
@@ -42,9 +43,10 @@
           {{ tweet.retweets }}
         </ion-button>
       </ion-col>
+      -->
       <ion-col>
         <ion-button
-          (click)="tweet.liked = !tweet.liked"
+          (click)="handleLike(tweet)"
           fill="clear"
           [color]="tweet.liked ? 'danger' : 'medium'"
           size="small"
@@ -53,14 +55,16 @@
             [name]="tweet.liked ? 'heart' : 'heart-outline'"
             slot="start"
           ></ion-icon>
-          {{ tweet.like }}
+          {{ tweet.post_likes }}
         </ion-button>
       </ion-col>
+      <!--
       <ion-col>
         <ion-button fill="clear" color="medium" size="small">
           <ion-icon name="share-outline" slot="start"></ion-icon>
         </ion-button>
       </ion-col>
+      -->
     </ion-row>
   </ion-col>
 </ion-row>
