@@ -39,23 +39,20 @@
 <div class="ion-page" id="main-content">
   <div class="ion-padding">
     <div class="profile-label">
-      <ion-label class="handle-title">Juan Jose Romero Zabala</ion-label>
-      <ion-label class="handle">@juan_romero5</ion-label>
+      <ion-label class="handle-title">{{user.first_name}} {{user.last_name}}</ion-label>
+      <ion-label class="handle">@{{user.alias}}</ion-label>
     </div>
     <ion-text class="profile-bio handle"
-      >Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus
-      mollitia ratione quos quas doloremque odio qui vero, iusto, magni
-      recusandae modi illo aut optio, ea dolorem numquam pariatur nostrum
-      aperiam!</ion-text
+      >{{ user.biography }}</ion-text
     >
   </div>
   <div>
     <ion-button id="open-modal-following" fill="clear" color="dark">
-      <ion-label class="padding-numbers">30</ion-label>
+      <ion-label class="padding-numbers">{{user.user_followings}}</ion-label>
       <ion-label class="handle">Following</ion-label>
     </ion-button>
     <ion-button id="open-modal-followers" fill="clear" color="dark">
-      <ion-label class="padding-numbers">10</ion-label>
+      <ion-label class="padding-numbers">{{ user.user_followers }}</ion-label>
       <ion-label class="handle">Followers</ion-label>
     </ion-button>
   </div>
