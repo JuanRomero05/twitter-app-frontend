@@ -216,6 +216,14 @@
       <app-tweet *ngFor="let tweet of tweets" [tweet]="tweet"></app-tweet>
     </div>
 
+    <div [hidden]="segment != 'replies'">
+      <app-tweet *ngFor="let tweet of replies" [tweet]="tweet"></app-tweet>
+    </div>
+
+    <div [hidden]="segment != 'likes'">
+      <app-tweet *ngFor="let tweet of likes" [tweet]="tweet"></app-tweet>
+    </div>
+
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button (click)="openNewTweet()">
         <ion-fab-content>

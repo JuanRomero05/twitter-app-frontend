@@ -40,22 +40,23 @@ export class TweetComponent implements OnInit {
   }
 
   handleLike = async (tweet: any) => {
-    tweet.liked = !tweet.liked
-
     // se agrega o se elimina el like en la bd
     const token = await Preferences.get({ key: 'token' })
     const id = await Preferences.get({ key: 'id' })
     const headers = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
     const body = { user_id: id.value, post_id: tweet.post_id }
-
-    this.http.post(env.api+'/likes', body, { headers: headers})
+    
+    this.http.post(env.api+'likes', body, { headers: headers})
       .subscribe(() => {
         if (tweet.liked)
-          tweet.post_likes++
+          tweet.post_likes--
         else
-          tweet.post_likes-- 
-      }, (err) => {
-        const alert = this.createAlert('Failure', err.error.msg)
+          tweet.post_likes++ 
+
+        tweet.liked = !tweet.liked
+      }, async (err) => {
+        const alert = await this.createAlert('Failure', err.error.msg)
+        alert.present()
       })
   }
 

@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { IonModal } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { environment as env } from 'src/environments/environment';
+import { Preferences } from '@capacitor/preferences';
 
 @Component({
   selector: 'app-profile',
@@ -47,12 +49,32 @@ export class ProfilePage implements OnInit {
 
   tweets = [];
 
+  replies = [];
+
+  likes = [];
+
   showNewTweet = false;
 
-  ngOnInit() {
-    this.http.get('https://devdactic.fra1.digitaloceanspaces.com/twitter-ui/tweets.json').subscribe((data: any) => {
-      console.log('tweets: ', data.tweets);
-      this.tweets = data.tweets;
+  async ngOnInit() {
+    const token = await Preferences.get({ key: 'token' })
+    const id = await Preferences.get({ key: 'id' })
+    const headers = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
+
+    // 
+
+    // tweets del usuario
+    this.http.get(env.api+`users/${id.value}/tweets`, { headers: headers }).subscribe((data: any) => {
+      this.tweets = data;
+    })
+
+    // comentarios del usuario
+    this.http.get(env.api+`users/${id.value}/comments`, { headers: headers }).subscribe((data: any) => {
+      this.replies = data;
+    })
+
+    // tweets con like del usuario
+    this.http.get(env.api+`users/${id.value}/tweets/liked`, { headers: headers }).subscribe((data: any) => {
+      this.likes = data;
     })
   }
 

@@ -20,11 +20,11 @@ import { SharedTweetComponentModule } from 'src/app/components/tweet/shared-twee
     ReactiveFormsModule,
     IonicModule,
     ProfilePageRoutingModule,
-    //SharedTweetComponentModule
+    SharedTweetComponentModule
     //SharedNewTweetComponentModule,
     /* SharedComponentsModule */
   ],
-  declarations: [ProfilePage/* , TweetComponent, NewTweetComponent */],
+  declarations: [ProfilePage/*, TweetComponent, NewTweetComponent */],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ]
