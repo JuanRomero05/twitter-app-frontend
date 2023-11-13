@@ -8,6 +8,8 @@ import { ProfilePageRoutingModule } from './profile-routing.module';
 
 import { ProfilePage } from './profile.page';
 import { SharedTweetComponentModule } from 'src/app/components/tweet/shared-tweet-component.module';
+import { FollowingModule } from 'src/app/components/following/following.module';
+import { FollowersModule } from 'src/app/components/followers/followers.module';
 //import { SharedNewTweetComponentModule } from 'src/app/components/new-tweet/shared-new-tweet-component.module';
 //import { SharedComponentsModule } from 'src/app/components/shared-components.module';
 //import { TweetComponent } from 'src/app/components/tweet/tweet.component';
@@ -20,7 +22,9 @@ import { SharedTweetComponentModule } from 'src/app/components/tweet/shared-twee
     ReactiveFormsModule,
     IonicModule,
     ProfilePageRoutingModule,
-    SharedTweetComponentModule
+    SharedTweetComponentModule,
+    FollowingModule,
+    FollowersModule
     //SharedNewTweetComponentModule,
     /* SharedComponentsModule */
   ],
