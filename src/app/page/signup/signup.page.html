@@ -19,6 +19,7 @@
             formControlName="username"
             label="Username"
             labelPlacement="floating"
+            [clearInput]="true"
           ></ion-input>
         </ion-item>
         &nbsp;
@@ -27,6 +28,7 @@
             formControlName="firstName"
             label="Fist name"
             labelPlacement="floating"
+            [clearInput]="true"
           ></ion-input>
         </ion-item>
         &nbsp;
@@ -35,6 +37,7 @@
             formControlName="lastName"
             label="Last name"
             labelPlacement="floating"
+            [clearInput]="true"
           ></ion-input>
         </ion-item>
         &nbsp;
@@ -72,6 +75,7 @@
             type="password"
             label="Repeat password"
             labelPlacement="floating"
+            errorText="Passwords do not match"
           ></ion-input>
           <ion-icon
             [name]="eyeIconRepeat"
