@@ -9,6 +9,8 @@ export class SearchPage implements OnInit {
 
   constructor() { }
 
+  segment: String = 'users';
+
   ngOnInit() {
   }
 

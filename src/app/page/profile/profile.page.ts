@@ -63,17 +63,17 @@ export class ProfilePage implements OnInit {
     // 
 
     // tweets del usuario
-    this.http.get(env.api+`users/${id.value}/tweets`, { headers: headers }).subscribe((data: any) => {
+    this.http.get(env.api + `users/${id.value}/tweets`, { headers: headers }).subscribe((data: any) => {
       this.tweets = data;
     })
 
     // comentarios del usuario
-    this.http.get(env.api+`users/${id.value}/comments`, { headers: headers }).subscribe((data: any) => {
+    this.http.get(env.api + `users/${id.value}/comments`, { headers: headers }).subscribe((data: any) => {
       this.replies = data;
     })
 
     // tweets con like del usuario
-    this.http.get(env.api+`users/${id.value}/tweets/liked`, { headers: headers }).subscribe((data: any) => {
+    this.http.get(env.api + `users/${id.value}/tweets/liked`, { headers: headers }).subscribe((data: any) => {
       this.likes = data;
     })
   }
