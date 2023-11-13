@@ -4,7 +4,9 @@ import { IonModal } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment as env } from 'src/environments/environment';
-import { Preferences } from '@capacitor/preferences';
+import { GetResult, Preferences } from '@capacitor/preferences';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-profile',
@@ -18,7 +20,8 @@ export class ProfilePage implements OnInit {
   constructor(
     private http: HttpClient,
     public alertController: AlertController,
-    public fb: FormBuilder
+    public fb: FormBuilder,
+    private router: Router
   ) {
     this.modalFollowing = null as any
     this.modalFollowers = null as any
@@ -46,6 +49,15 @@ export class ProfilePage implements OnInit {
   eyeIconRepeat: string = 'eye-outline';
 
   segment: String = 'posts';
+  
+  user = {
+    alias: "",
+    first_name: "",
+    last_name: "",
+    biography: "",
+    user_followings: 0,
+    user_followers: 0
+  }
 
   tweets = [];
 
@@ -60,7 +72,18 @@ export class ProfilePage implements OnInit {
     const id = await Preferences.get({ key: 'id' })
     const headers = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
 
-    // 
+    // datos del usuario
+    this.http.get(env.api+`users/${id.value}`, { headers: headers }).subscribe((data: any) => {
+      this.user = data
+
+      // actualizando datos del formulario de editar perfil
+      const { first_name, last_name, biography } = data
+      const { controls } = this.editProfileForm
+      
+      controls['firstName'].setValue(first_name)
+      controls['lastName'].setValue(last_name)
+      controls['bio'].setValue(biography)
+    })
 
     // tweets del usuario
     this.http.get(env.api+`users/${id.value}/tweets`, { headers: headers }).subscribe((data: any) => {
@@ -124,12 +147,26 @@ export class ProfilePage implements OnInit {
     const alert = await this.alertController.create({
       header,
       message,
+      buttons: ['Ok']
+    });
+
+    return alert
+  }
+
+  createLogOutAlert = async (header: string, message: string) => {
+    const alert = await this.alertController.create({
+      header,
+      message,
       buttons: [
         {
           text: 'Confirm',
-          handler: () => {
-            //TODO: Agregar logica para cerrar la sesion
-            console.log('User confirm logOut');
+          handler: async () => {
+            // se eliminan los datos del almacenamiento local
+            await Preferences.remove({ key: 'token' })
+            await Preferences.remove({ key: 'id' })
+
+            // se redirige al login
+            this.router.navigate(['/'])
           }
         },
         'Cancel'
@@ -140,13 +177,35 @@ export class ProfilePage implements OnInit {
   }
 
   async logOut() {
-    const alert = await this.createAlert('Log Out?', 'Are you sure you want to log out?')
+    const alert = await this.createLogOutAlert('Log Out?', 'Are you sure you want to log out?')
     await alert.present();
     return;
   }
 
   async saveEditData() {
-    console.log('giovanni es gay');
+    const { controls } = this.editProfileForm
+    const updatedUser: any = {
+      first_name: controls['firstName'].value,
+      last_name: controls['lastName'].value,
+      biography: controls['bio'].value
+    }
+    
+    if (controls['password'].value != '') 
+      updatedUser.password = controls['password']
+
+
+    const token = await Preferences.get({ key: 'token' })
+    const id = await Preferences.get({ key: 'id' })
+
+    const headers = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
+
+    this.http.put(env.api+`users/${id.value}`, updatedUser, { headers: headers }).subscribe((data: any) => {
+      this.router.navigate(['/tab-inicial-profile'])
+      // refrescar
+    }, async (err: any) => {
+      const alert = await this.createAlert('Failure', err.error.msg)
+      alert.present()
+    })
   }
 
 }
