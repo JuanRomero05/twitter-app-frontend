@@ -16,6 +16,15 @@
      border-bottom: 1px solid var(--ion-color-light);
 }
 
+.flex {
+     display: flex;
+     justify-content: space-between;
+}
+
+.follow {
+     margin-left: auto; 
+}
+
 .custom-avatar{
      width: 55px;
      height: 55px;

@@ -5,10 +5,16 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './followers.component.html',
   styleUrls: ['./followers.component.scss'],
 })
-export class FollowersComponent  implements OnInit {
+export class FollowersComponent implements OnInit {
+
+  isFollowing = false;
+
+  toggleFollow() {
+    this.isFollowing = !this.isFollowing;
+  }
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
 }

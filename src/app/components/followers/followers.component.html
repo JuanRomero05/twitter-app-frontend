@@ -8,11 +8,20 @@
   <ion-col size="10">
     <ion-row class="tweet-info">
       <ion-col size="12">
-        <span class="name">Elon Musk</span>
-      </ion-col>
-
-      <ion-col size="12">
-        <span class="handle">@MUSk</span>
+        <div class="flex">
+          <span class="name">Elon Musk</span>
+          <ion-button
+            shape="round"
+            fill="outline"
+            class="follow"
+            [color]="isFollowing ? 'danger' : 'dark'"
+            (click)="toggleFollow()"
+            >{{ isFollowing ? "Unfollow" : "Follow" }}</ion-button
+          >
+        </div>
+        <ion-row>
+          <span class="handle">@MUSk</span>
+        </ion-row>
       </ion-col>
 
       <ion-col size="12">

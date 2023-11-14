@@ -8,11 +8,20 @@
   <ion-col size="10">
     <ion-row class="tweet-info">
       <ion-col size="12">
-        <span class="name">Giovanni Urdaneta</span>
-      </ion-col>
-
-      <ion-col size="12">
-        <span class="handle">@giout_</span>
+        <div class="flex">
+          <span class="name">Giovanni Urdaneta</span>
+          <ion-button
+            shape="round"
+            fill="outline"
+            class="follow"
+            [color]="isFollowing ? 'primary' : 'dark'"
+            (click)="toggleFollow()"
+            >{{ isFollowing ? "Follow" : "Following" }}</ion-button
+          >
+        </div>
+        <ion-row>
+          <span class="handle">@giout_</span>
+        </ion-row>
       </ion-col>
 
       <ion-col size="12">
