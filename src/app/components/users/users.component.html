@@ -9,25 +9,24 @@
     <ion-row class="tweet-info">
       <ion-col size="12">
         <div class="flex">
-          <span class="name">Juan Romero</span>
+          <span class="name">{{ user.first_name }} {{ user.last_name }}</span>
           <ion-button
             shape="round"
             fill="outline"
             class="follow"
-            [color]="isFollowing ? 'primary' : 'dark'"
+            [color]="isFollowing ? 'dark' : 'primary'"
             (click)="toggleFollow()"
-            >{{ isFollowing ? "Follow" : "Following" }}</ion-button
+            >{{ isFollowing ?  "Following" : "Follow" }}</ion-button
           >
         </div>
         <ion-row>
-          <span class="handle">@_JJ_</span>
+          <span class="handle">@{{ user.alias }}</span>
         </ion-row>
       </ion-col>
 
       <ion-col size="12">
         <span class="custom-text"
-          >Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat sed
-          dolores quam expedita atque quasi!</span
+          >{{ user.biography }}</span
         >
       </ion-col>
     </ion-row>

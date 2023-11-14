@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Preferences } from '@capacitor/preferences';
 
 @Component({
   selector: 'app-following',
@@ -6,6 +7,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./following.component.scss'],
 })
 export class FollowingComponent implements OnInit {
+
+  @Input() user: any;
+
+  id: string | null = ''
 
   isFollowing = false;
 
@@ -15,6 +20,9 @@ export class FollowingComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() { }
+  async ngOnInit() {
+    const id = await Preferences.get({ key: 'id' })
+    this.id = id.value    
+  }
 
 }

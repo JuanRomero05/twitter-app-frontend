@@ -28,12 +28,7 @@
 
     <div [hidden]="users.length === 0">
       <ion-list>
-        <app-users *ngFor="let result of users"></app-users>
-        <!--
-        <ion-item *ngFor="let result of users">
-          <ion-label>{{ result.first_name }} {{ result.last_name }}</ion-label>
-        </ion-item>
-        -->
+        <app-users *ngFor="let result of users" [user]="result"></app-users>
       </ion-list>
     </div>
   </div>
