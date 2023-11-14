@@ -184,6 +184,7 @@ export class ProfilePage implements OnInit {
 
   async saveEditData() {
     const { controls } = this.editProfileForm
+
     const updatedUser: any = {
       first_name: controls['firstName'].value,
       last_name: controls['lastName'].value,
@@ -191,19 +192,19 @@ export class ProfilePage implements OnInit {
     }
     
     if (controls['password'].value != '') 
-      updatedUser.password = controls['password']
-
+      updatedUser.password = controls['password'].value
 
     const token = await Preferences.get({ key: 'token' })
     const id = await Preferences.get({ key: 'id' })
 
     const headers = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
 
-    this.http.put(env.api+`users/${id.value}`, updatedUser, { headers: headers }).subscribe((data: any) => {
-      this.router.navigate(['/tab-inicial-profile'])
+    this.http.put(env.api+`users/${id.value}`, updatedUser, { headers: headers }).subscribe(async (data: any) => {
+      const alert = await this.createAlert('Updated profile', 'Your profile has been successfully updated')
+      alert.present()
       // refrescar
     }, async (err: any) => {
-      const alert = await this.createAlert('Failure', err.error.msg)
+      const alert = await this.createAlert('Failure', 'Error')
       alert.present()
     })
   }
