@@ -21,21 +21,21 @@
 
 <ion-content class="ion-padding">
   <div [hidden]="segment != 'users'">
-
-    <div *ngIf="results.length === 0" class="no-results-div">
+    <div *ngIf="users.length === 0" class="no-results-div">
       <ion-icon name="skull" color="danger" size="large"></ion-icon>
       <ion-label class="handle-label">No results</ion-label>
     </div>
 
-    <div [hidden]="results.length === 0">
+    <div [hidden]="users.length === 0">
       <ion-list>
-        <ion-item *ngFor="let result of results">
-          <ion-label>{{ result }}</ion-label>
+        <app-users *ngFor="let result of users"></app-users>
+        <!--
+        <ion-item *ngFor="let result of users">
+          <ion-label>{{ result.first_name }} {{ result.last_name }}</ion-label>
         </ion-item>
+        -->
       </ion-list>
-      <!-- <app-users></app-users> -->
     </div>
-
   </div>
 
   <div [hidden]="segment != 'tweets'">
@@ -77,5 +77,20 @@
         </ion-button>
       </ion-col>
     </ion-row>
+    <div *ngIf="tweets.length === 0" class="no-results-div">
+      <ion-icon name="skull" color="danger" size="large"></ion-icon>
+      <ion-label class="handle-label">No results</ion-label>
+    </div>
+
+    <div [hidden]="tweets.length === 0">
+      <ion-list>
+        <app-tweet *ngFor="let result of tweets" [tweet]="result"></app-tweet>
+        <!--
+        <ion-item *ngFor="let result of tweets">
+          <ion-label>{{ result.alias }} - {{ result.post_content }}</ion-label>
+        </ion-item>
+        -->
+      </ion-list>
+    </div>
   </div>
 </ion-content>
