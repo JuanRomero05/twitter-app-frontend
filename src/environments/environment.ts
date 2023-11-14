@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  //api: 'https://twitter-api-awdc.onrender.com/api/'
-  api: 'http://localhost:4000/api/'
+  api: 'https://twitter-api-awdc.onrender.com/api/'
+  //api: 'http://localhost:4000/api/'
 };
 
 /*
