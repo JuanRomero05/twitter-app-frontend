@@ -7,14 +7,18 @@ import { IonicModule } from '@ionic/angular';
 import { SearchPageRoutingModule } from './search-routing.module';
 
 import { SearchPage } from './search.page';
+import { SharedTweetComponentModule } from 'src/app/components/tweet/shared-tweet-component.module';
+import { UsersModule } from 'src/app/components/users/users.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    SearchPageRoutingModule
+    SearchPageRoutingModule,
+    SharedTweetComponentModule,
+    UsersModule
   ],
   declarations: [SearchPage]
 })
-export class SearchPageModule {}
+export class SearchPageModule { }

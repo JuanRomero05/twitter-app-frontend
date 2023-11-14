@@ -1,0 +1,35 @@
+<ion-row class="wrapper">
+  <ion-col size="2">
+    <ion-avatar class="custom-avatar">
+      <!-- <ion-img [src]="tweet.img"></ion-img> -->
+      <ion-icon name="logo-twitter" color="primary"></ion-icon>
+    </ion-avatar>
+  </ion-col>
+  <ion-col size="10">
+    <ion-row class="tweet-info">
+      <ion-col size="12">
+        <div class="flex">
+          <span class="name">Juan Romero</span>
+          <ion-button
+            shape="round"
+            fill="outline"
+            class="follow"
+            [color]="isFollowing ? 'primary' : 'dark'"
+            (click)="toggleFollow()"
+            >{{ isFollowing ? "Follow" : "Following" }}</ion-button
+          >
+        </div>
+        <ion-row>
+          <span class="handle">@_JJ_</span>
+        </ion-row>
+      </ion-col>
+
+      <ion-col size="12">
+        <span class="custom-text"
+          >Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat sed
+          dolores quam expedita atque quasi!</span
+        >
+      </ion-col>
+    </ion-row>
+  </ion-col>
+</ion-row>
