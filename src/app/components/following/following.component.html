@@ -10,14 +10,6 @@
       <ion-col size="12">
         <div class="flex">
           <span class="name">{{ user.first_name }} {{ user.last_name }}</span>
-          <ion-button
-            shape="round"
-            fill="outline"
-            class="follow"
-            [color]="isFollowing ? 'primary' : 'dark'"
-            (click)="toggleFollow()"
-            >{{ isFollowing ? "Follow" : "Following" }}</ion-button
-          >
         </div>
         <ion-row>
           <span class="handle">@{{ user.alias }}</span>
