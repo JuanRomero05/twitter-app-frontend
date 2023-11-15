@@ -1,33 +1,23 @@
 <ion-row class="wrapper">
   <ion-col size="2">
     <ion-avatar class="custom-avatar">
-      <!-- <ion-img [src]="tweet.img"></ion-img> -->
-      <ion-icon name="logo-twitter" color="primary"></ion-icon>
+      <ion-img [src]="'https://firebasestorage.googleapis.com/v0/b/mobile-apps-d0b43.appspot.com/o/twitter-posts%2Fprofile.jpg?alt=media&token=336149f6-3a78-4d60-a2f6-7b26d8a12a55'"></ion-img>
     </ion-avatar>
   </ion-col>
   <ion-col size="10">
     <ion-row class="tweet-info">
       <ion-col size="12">
         <div class="flex">
-          <span class="name">Juan Romero</span>
-          <ion-button
-            shape="round"
-            fill="outline"
-            class="follow"
-            [color]="isFollowing ? 'primary' : 'dark'"
-            (click)="toggleFollow()"
-            >{{ isFollowing ? "Follow" : "Following" }}</ion-button
-          >
+          <span class="name">{{ user.first_name }} {{ user.last_name }}</span>
         </div>
         <ion-row>
-          <span class="handle">@_JJ_</span>
+          <span class="handle">@{{ user.alias }}</span>
         </ion-row>
       </ion-col>
 
       <ion-col size="12">
         <span class="custom-text"
-          >Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat sed
-          dolores quam expedita atque quasi!</span
+          >{{ user.biography }}</span
         >
       </ion-col>
     </ion-row>

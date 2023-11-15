@@ -1,4 +1,7 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { GetResult, Preferences } from '@capacitor/preferences';
+import { environment as env } from 'src/environments/environment';
 
 @Component({
   selector: 'app-search',
@@ -6,56 +9,74 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./search.page.scss'],
 })
 export class SearchPage implements OnInit {
+    
+  constructor(private http: HttpClient) {}
 
-  constructor() { }
-
+  // por defecto, el buscador se situa en usuarios
   segment: String = 'users';
 
-  public data = [
-    'Amsterdam',
-    'Buenos Aires',
-    'Cairo',
-    'Geneva',
-    'Hong Kong',
-    'Istanbul',
-    'London',
-    'Madrid',
-    'New York',
-    'Panama City',
-  ];
+  query: string = '';
 
-  public data2 = [];
-  /* public results = [...this.data];
+  token: string | null = ''
 
-  handleInput(event: any) {
-    const query = event.target.value.toLowerCase();
-    this.results = this.data.filter((d) => d.toLowerCase().indexOf(query) > -1);
-  } */
+  header: HttpHeaders = new HttpHeaders()
 
-  results: string[] = [];
+  users: any[] = [];
 
-  handleInput(event: any) {
-    const query = event.target.value.toLowerCase();
-    this.results = this.data.filter((d) => d.toLowerCase().indexOf(query) > -1);
+  tweets: any[] = [];
+
+  async findTweets(order: string) {
+     // agregar loading
+    this.tweets = [] // se reinicia la busqueda
+
+    this.http.get(
+      env.api+`tweets?content=${this.query}&order=${order}`, 
+      { headers: this.header })
+      .subscribe((data: any) => {
+        this.tweets = data
+      })
   }
 
+
+  async handleInput(event: any) {
+    // agregar loading
+    this.query = event.target.value.toLowerCase();
+
+    if (this.query === '')
+      return 
+    
+    // se hace la busqueda de tweets y usuarios por simultaneo
+    this.http.get(env.api+`users?search=${this.query}`, { headers: this.header })
+      .subscribe((data: any) => {
+        this.users = data
+      })
+
+    // los tweets se ordenan en reciente por defecto
+    await this.findTweets('new')
+  }
+
+  
   clearResults() {
-    this.results = [...this.data2];
+    this.users = []
+    this.tweets = []
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    const token = await Preferences.get({ key: 'token' })
+    this.token = token.value
+
+    this.header = new HttpHeaders().append('Authorization', `Bearer ${this.token}`)
   }
 
-  mostRecents() {
-    console.log("News");
+  async mostRecents() {
+    await this.findTweets('new')
   }
 
-  lessRecents() {
-    console.log("Olds");
+  async lessRecents() {
+    await this.findTweets('old')
   }
 
-  topLiked() {
-    console.log("Populars");
+  async topLiked() {
+    await this.findTweets('popular')
   }
-
 }

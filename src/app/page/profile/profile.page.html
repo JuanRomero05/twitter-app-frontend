@@ -86,7 +86,7 @@
           </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-          <app-following></app-following>
+          <app-following *ngFor="let user of following" [user]="user"></app-following>
         </ion-content>
       </ng-template>
     </ion-modal>
@@ -107,7 +107,7 @@
           </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-          <app-followers></app-followers>
+          <app-followers *ngFor="let user of followers" [user]="user"></app-followers>
         </ion-content>
       </ng-template>
     </ion-modal>

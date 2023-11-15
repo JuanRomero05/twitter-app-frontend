@@ -59,6 +59,16 @@ export class ProfilePage implements OnInit {
     user_followers: 0
   }
 
+  token: string | null = ''
+
+  id: string | null = ''
+
+  header: HttpHeaders = new HttpHeaders()
+
+  following = [];
+
+  followers = [];
+
   tweets = [];
 
   replies = [];
@@ -70,10 +80,14 @@ export class ProfilePage implements OnInit {
   async ngOnInit() {
     const token = await Preferences.get({ key: 'token' })
     const id = await Preferences.get({ key: 'id' })
-    const headers = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
+
+    this.token = token.value
+    this.id = id.value
+    this.header =  new HttpHeaders().append('Authorization', `Bearer ${this.token}`)
 
     // datos del usuario
-    this.http.get(env.api+`users/${id.value}`, { headers: headers }).subscribe((data: any) => {
+    this.http.get(env.api+`users/${this.id}`, { headers: this.header })
+      .subscribe((data: any) => {
       this.user = data
 
       // actualizando datos del formulario de editar perfil
@@ -86,18 +100,33 @@ export class ProfilePage implements OnInit {
     })
 
     // tweets del usuario
-    this.http.get(env.api + `users/${id.value}/tweets`, { headers: headers }).subscribe((data: any) => {
+    this.http.get(env.api + `users/${this.id}/tweets`, { headers: this.header })
+      .subscribe((data: any) => {
       this.tweets = data;
     })
 
     // comentarios del usuario
-    this.http.get(env.api + `users/${id.value}/comments`, { headers: headers }).subscribe((data: any) => {
+    this.http.get(env.api + `users/${this.id}/comments`, { headers: this.header })
+      .subscribe((data: any) => {
       this.replies = data;
     })
 
     // tweets con like del usuario
-    this.http.get(env.api + `users/${id.value}/tweets/liked`, { headers: headers }).subscribe((data: any) => {
+    this.http.get(env.api + `users/${this.id}/tweets/liked`, { headers: this.header })
+      .subscribe((data: any) => {
       this.likes = data;
+    })
+
+    // seguidores
+    this.http.get(env.api+`users/${this.id}/followers`, { headers: this.header })
+      .subscribe((data:any) => {
+        this.followers = data;
+    })
+
+    // seguidos
+    this.http.get(env.api+`users/${this.id}/followings`, { headers: this.header })
+    .subscribe((data:any) => {
+      this.following = data;
     })
   }
 
@@ -194,12 +223,7 @@ export class ProfilePage implements OnInit {
     if (controls['password'].value != '') 
       updatedUser.password = controls['password'].value
 
-    const token = await Preferences.get({ key: 'token' })
-    const id = await Preferences.get({ key: 'id' })
-
-    const headers = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
-
-    this.http.put(env.api+`users/${id.value}`, updatedUser, { headers: headers }).subscribe(async (data: any) => {
+    this.http.put(env.api+`users/${this.id}`, updatedUser, { headers: this.header }).subscribe(async (data: any) => {
       const alert = await this.createAlert('Updated profile', 'Your profile has been successfully updated')
       alert.present()
       // refrescar
