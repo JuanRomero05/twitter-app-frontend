@@ -35,7 +35,9 @@ export class NewTweetComponent implements OnInit {
 
   @ViewChild(IonModal) modal: IonModal;
 
-  async ngOnInit() {
+  ngOnInit() { }
+
+  async ionViewWillEnter(){
     const token = await Preferences.get({ key: "token" })
     const id = await Preferences.get({ key: "id" })
 
@@ -87,7 +89,7 @@ export class NewTweetComponent implements OnInit {
           {
             text: 'Confirm',
             handler: () => {
-              this.isModalOpen = false;
+              this.modal.dismiss(null, 'cancel')
             }
           },
           {
