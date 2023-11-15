@@ -39,3 +39,24 @@
      line-height: 1.6;
      /* Ajusta el valor según el espacio deseado entre líneas */
 }
+
+.icons-container {
+     display: flex;
+     flex-direction: column;
+     font-size: 28px;
+     padding-right: 15px;
+}
+
+.iconCamera {
+     margin-bottom: 5px;
+}
+
+.form {
+     margin-top: 20px;
+}
+
+.handle-col {
+     margin-top: 6px;
+     padding-top: 0px;
+     padding-bottom: 0px;
+}

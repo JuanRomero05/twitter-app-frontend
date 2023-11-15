@@ -27,7 +27,7 @@
     <ion-row class="ion-justify-content-start">
       <ion-col>
         <ion-button
-          [id]="tweet.post_id" 
+          (click)="setOpen(true)"
           fill="clear" 
           color="medium" 
           size="small"
@@ -35,19 +35,7 @@
           <ion-icon name="chatbubble-outline" slot="start"></ion-icon>{{ tweet.post_comments }}
         </ion-button>
       </ion-col>
-      <!--
-      <ion-col>
-        <ion-button
-          (click)="tweet.retweet = !tweet.retweet"
-          fill="clear"
-          [color]="tweet.retweet ? 'success' : 'medium'"
-          size="small"
-        >
-          <ion-icon name="repeat-outline" slot="start"></ion-icon>
-          {{ tweet.retweets }}
-        </ion-button>
-      </ion-col>
-      -->
+
       <ion-col>
         <ion-button
           (click)="handleLike(tweet)"
@@ -62,35 +50,132 @@
           {{ tweet.post_likes }}
         </ion-button>
       </ion-col>
-      <!--
+
       <ion-col>
-        <ion-button fill="clear" color="medium" size="small">
-          <ion-icon name="share-outline" slot="start"></ion-icon>
+        <ion-button
+          fill="clear"
+          color="medium"
+          size="small"
+        >
+          <ion-icon name="trash-outline" slot="start"></ion-icon>
         </ion-button>
       </ion-col>
-      -->
+
     </ion-row>
   </ion-col>
 </ion-row>
 
 <ion-content>
 
-  <ion-modal [trigger]="tweet.post_id">
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-icon
-            name="arrow-back-outline"
-            (click)="cancelTweetModal()"
-            class="handle-back-button"
-            size="small"
-          ></ion-icon>
-        </ion-buttons>
-        <ion-title>Post</ion-title>
-      </ion-toolbar>
-    </ion-header>
+  <ion-modal [isOpen]="isModalOpen">
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-icon
+              name="arrow-back-outline"
+              (click)="setOpen(false)"
+              class="handle-back-button"
+              size="small"
+            ></ion-icon>
+          </ion-buttons>
+          <ion-title>Post</ion-title>
+        </ion-toolbar>
+      </ion-header>
       <ion-content class="ion-padding">
-        <ion-label>{{ tweet.post_content }}</ion-label>
+        
+        <ion-row class="wrapper">
+          <ion-col size="2">
+            <ion-avatar class="custom-avatar">
+              <ion-img 
+                [src]="'https://firebasestorage.googleapis.com/v0/b/mobile-apps-d0b43.appspot.com/o/twitter-posts%2Fprofile.jpg?alt=media&token=336149f6-3a78-4d60-a2f6-7b26d8a12a55'"
+              >
+              </ion-img>
+            </ion-avatar>
+          </ion-col>
+
+          <ion-col size="10">
+            <ion-row class="tweet-info">
+              <ion-col size="12">
+                <span class="name">{{ tweet.first_name }} {{ tweet.last_name }}</span>
+                <span class="handle">@{{ tweet.alias }}</span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="12">
+                <div class="custom-text" [innerHtml]="tweet.post_content"></div>
+                <img
+                  class="preview-img"
+                  [src]="tweet.image_url"
+                  *ngIf="tweet.image_url"
+                />
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="ion-justify-content-start wrapper">
+          <ion-col size="2"></ion-col>
+          <ion-col size="3" class="handle-col">
+            <ion-button
+              fill="clear" 
+              color="medium" 
+              size="small"
+            >
+              <ion-icon name="chatbubble-outline" slot="start"></ion-icon>{{ tweet.post_comments }}
+            </ion-button>
+          </ion-col>
+        
+          <ion-col size="3" class="handle-col">
+            <ion-button
+              (click)="handleLike(tweet)"
+              fill="clear"
+              [color]="tweet.liked ? 'danger' : 'medium'"
+              size="small"
+            >
+              <ion-icon
+                [name]="tweet.liked ? 'heart' : 'heart-outline'"
+                slot="start"
+              ></ion-icon>
+              {{ tweet.post_likes }}
+            </ion-button>
+          </ion-col>
+
+          <ion-col size="3" class="handle-col">
+            <ion-button
+              fill="clear"
+              color="medium"
+              size="small"
+            >
+              <ion-icon name="trash-outline" slot="start"></ion-icon>
+            </ion-button>
+          </ion-col>
+          <ion-col size="2"></ion-col>
+        </ion-row>
+
+        <div class="form">
+          <form [formGroup]="replyForm">
+            <ion-item>
+              <div class="icons-container">
+                <ion-icon
+                  name="camera-outline"
+                  color="primary"
+                  class="iconCamera"
+                ></ion-icon>
+                <ion-icon
+                  name="images-outline"
+                  color="primary"
+                  class="iconImages"
+                ></ion-icon>
+              </div>
+              <ion-textarea
+                formControlName="reply"
+                placeholder="Post your reply"
+                [counter]="true"
+                maxlength="180"
+              ></ion-textarea>
+            </ion-item>
+          </form>
+        </div>
       </ion-content>
   </ion-modal>
 

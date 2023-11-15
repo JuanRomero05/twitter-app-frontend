@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment as env } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
 import { AlertController, IonModal } from '@ionic/angular';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-tweet',
@@ -14,24 +15,28 @@ import { AlertController, IonModal } from '@ionic/angular';
 export class TweetComponent implements OnInit {
 
   @Input() tweet: any;
-  @Input() index: number;
+
+  isModalOpen = false;
+
+  replyForm: FormGroup;
 
   constructor(
     public alertController: AlertController,
     private http: HttpClient,
+    public fb: FormBuilder
   ) {
-    this.tweetModal = null as any
-    this.index = 0
+    this.replyForm = this.fb.group({
+      'reply': new FormControl,
+    })
   }
 
-  @ViewChild(IonModal) tweetModal: IonModal;
 
   ngOnInit() {
     this.parseTweet();
   }
 
-  cancelTweetModal() {
-    this.tweetModal.dismiss(null, 'cancel');
+  setOpen(isOpen: boolean) {
+    this.isModalOpen = isOpen;
   }
 
   parseTweet() {
