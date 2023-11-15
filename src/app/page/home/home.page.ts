@@ -13,22 +13,37 @@ export class HomePage implements OnInit {
 
   tweets = [];
 
+  token: string | null = ''
+
+  header: HttpHeaders = new HttpHeaders() 
+
   showNewTweet = false;
 
   constructor(private http: HttpClient) { }
 
   async ngOnInit() {
     const token = await Preferences.get({ key: 'token' })
-    const headers = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
-    
-    this.http.get(env.api+'tweets?offset=0&limit=10', { headers })
-      .subscribe((data: any) => {
-        this.tweets = data
+    this.token = token.value
+    this.header = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
+
+    this.getFeed().subscribe((data: any) => {
+      this.tweets = data
     })
   }
+
+  async handleRefresh(event: any) {
+    this.getFeed().subscribe((data: any) => {
+      this.tweets = data
+      event.target.complete()
+    })
+  }
+  
+  getFeed() {
+    return this.http.get(env.api+'tweets?offset=0&limit=10', { headers: this.header })
+  }
+
 
   openNewTweet() {
     this.showNewTweet = true;
   }
-
 }
