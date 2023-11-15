@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { IonModal, AlertController } from '@ionic/angular';
+import { IonModal, AlertController, IonMenu } from '@ionic/angular';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment as env } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
@@ -25,6 +25,7 @@ export class ProfilePage implements OnInit {
     this.modalFollowing = null as any
     this.modalFollowers = null as any
     this.modalEditProfile = null as any
+    this.menu = null as any
 
     this.editProfileForm = this.fb.group({
       'firstName': new FormControl,
@@ -38,6 +39,7 @@ export class ProfilePage implements OnInit {
   @ViewChild(IonModal) modalFollowing: IonModal;
   @ViewChild('followersModal') modalFollowers: IonModal;
   @ViewChild('editProfileModal') modalEditProfile: IonModal;
+  @ViewChild('menu') menu: IonMenu;
 
   @ViewChild('passwordInput') passwordInput: any;
   @ViewChild('repeatPasswordInput') repeatPasswordInput: any;
@@ -77,14 +79,6 @@ export class ProfilePage implements OnInit {
   showNewTweet = false;
 
   async ngOnInit() {
-    const token = await Preferences.get({ key: 'token' })
-    const id = await Preferences.get({ key: 'id' })
-
-    this.token = token.value
-    this.id = id.value
-    this.header =  new HttpHeaders().append('Authorization', `Bearer ${this.token}`)
-
-    this.fetchProfileData(()=>{})
   }
 
   handleRefresh(event: any) {
@@ -93,12 +87,23 @@ export class ProfilePage implements OnInit {
     })  
   }
 
-// end es el codigo que se ejecuta una vez se hayan obtenido todos los datos del perfil
-fetchProfileData(end: Function){
+  // cada vez que se ingresa al perfil, se recargan los datos
+  async ionViewWillEnter() {
+    const token = await Preferences.get({ key: 'token' })
+    const id = await Preferences.get({ key: 'id' })
+
+    this.token = token.value
+    this.id = id.value
+    this.header =  new HttpHeaders().append('Authorization', `Bearer ${this.token}`)
+    this.fetchProfileData(()=>{})
+  }
+
+  // end es el codigo que se ejecuta una vez se hayan obtenido todos los datos del perfil
+  fetchProfileData(end: Function){
     // tweets del usuario
     this.http.get(env.api + `users/${this.id}/tweets`, { headers: this.header })
       .subscribe((data: any) => {
-      this.tweets = data;
+        this.tweets = data;
     })
 
     // comentarios del usuario
@@ -141,6 +146,23 @@ fetchProfileData(end: Function){
 
       end()
     })
+  }
+
+  // se reinician los datos
+  cleanProfileData(){
+    this.following = [];
+    this.followers = [];
+    this.tweets = [];
+    this.replies = [];
+    this.likes = [];
+    this.user = {
+      alias: "",
+      first_name: "",
+      last_name: "",
+      biography: "",
+      user_followings: 0,
+      user_followers: 0
+    }
   }
 
   togglePasswordVisibility() {
@@ -207,6 +229,9 @@ fetchProfileData(end: Function){
             await Preferences.remove({ key: 'token' })
             await Preferences.remove({ key: 'id' })
 
+            this.cleanProfileData()
+            this.menu.close()
+
             // se redirige al login
             this.router.navigate(['/'])
           }
@@ -239,7 +264,9 @@ fetchProfileData(end: Function){
     this.http.put(env.api+`users/${this.id}`, updatedUser, { headers: this.header }).subscribe(async (data: any) => {
       const alert = await this.createAlert('Updated profile', 'Your profile has been successfully updated')
       alert.present()
-      // refrescar
+      this.cancelEditProfile()
+      this.menu.close()
+
     }, async (err: any) => {
       const alert = await this.createAlert('Failure', 'Error')
       alert.present()

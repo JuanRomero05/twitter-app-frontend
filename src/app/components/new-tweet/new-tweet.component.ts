@@ -64,6 +64,8 @@ export class NewTweetComponent implements OnInit {
 
     this.http.post(env.api+'tweets', body, { headers: this.header })
       .subscribe(async () => {
+        const alert = await this.createAlert('Post created', 'Your tweet has been published.')
+        alert.present()
         // salirse del modal
         this.modal.dismiss(null, 'cancel')
       }, async (err: any) => {

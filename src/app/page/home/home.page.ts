@@ -22,6 +22,10 @@ export class HomePage implements OnInit {
   constructor(private http: HttpClient) { }
 
   async ngOnInit() {
+  }
+
+  // cada vez que se accede al componente, se recargan los datos
+  async ionViewWillEnter(){
     const token = await Preferences.get({ key: 'token' })
     this.token = token.value
     this.header = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
