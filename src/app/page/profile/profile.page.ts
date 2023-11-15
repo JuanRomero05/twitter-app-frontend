@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { IonModal } from '@ionic/angular';
-import { AlertController } from '@ionic/angular';
+import { IonModal, AlertController } from '@ionic/angular';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment as env } from 'src/environments/environment';
-import { GetResult, Preferences } from '@capacitor/preferences';
+import { Preferences } from '@capacitor/preferences';
 import { Router } from '@angular/router';
 
 
@@ -85,20 +84,17 @@ export class ProfilePage implements OnInit {
     this.id = id.value
     this.header =  new HttpHeaders().append('Authorization', `Bearer ${this.token}`)
 
-    // datos del usuario
-    this.http.get(env.api+`users/${this.id}`, { headers: this.header })
-      .subscribe((data: any) => {
-      this.user = data
+    this.fetchProfileData(()=>{})
+  }
 
-      // actualizando datos del formulario de editar perfil
-      const { first_name, last_name, biography } = data
-      const { controls } = this.editProfileForm
-      
-      controls['firstName'].setValue(first_name)
-      controls['lastName'].setValue(last_name)
-      controls['bio'].setValue(biography)
-    })
+  handleRefresh(event: any) {
+    this.fetchProfileData(()=>{
+      event.target.complete()
+    })  
+  }
 
+// end es el codigo que se ejecuta una vez se hayan obtenido todos los datos del perfil
+fetchProfileData(end: Function){
     // tweets del usuario
     this.http.get(env.api + `users/${this.id}/tweets`, { headers: this.header })
       .subscribe((data: any) => {
@@ -120,13 +116,30 @@ export class ProfilePage implements OnInit {
     // seguidores
     this.http.get(env.api+`users/${this.id}/followers`, { headers: this.header })
       .subscribe((data:any) => {
-        this.followers = data;
-    })
+      this.followers = data;
+  })
 
     // seguidos
     this.http.get(env.api+`users/${this.id}/followings`, { headers: this.header })
-    .subscribe((data:any) => {
+    . subscribe((data:any) => {
       this.following = data;
+      end();
+    })
+
+    // datos del usuario
+    this.http.get(env.api+`users/${this.id}`, { headers: this.header })
+      .subscribe((data: any) => {
+      this.user = data
+
+      // actualizando datos del formulario de editar perfil
+      const { first_name, last_name, biography } = data
+      const { controls } = this.editProfileForm
+      
+      controls['firstName'].setValue(first_name)
+      controls['lastName'].setValue(last_name)
+      controls['bio'].setValue(biography)
+
+      end()
     })
   }
 

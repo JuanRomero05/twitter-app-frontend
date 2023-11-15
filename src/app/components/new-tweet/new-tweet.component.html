@@ -16,6 +16,7 @@
               class="btn-width"
               [disabled]="!newTweetForm.get('newTweet')?.value"
               [strong]="true"
+              (click)="createTweet()"
               >Post</ion-button
             >
           </ion-buttons>
@@ -26,14 +27,10 @@
           <ion-item>
             <div class="icons-container">
               <ion-icon
-                name="camera-outline"
-                color="primary"
-                class="iconCamera"
-              ></ion-icon>
-              <ion-icon
                 name="images-outline"
                 color="primary"
                 class="iconImages"
+                (click)="gallery()"
               ></ion-icon>
             </div>
             <ion-textarea

@@ -26,22 +26,21 @@ export class HomePage implements OnInit {
     this.token = token.value
     this.header = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
 
-    this.getFeed().subscribe((data: any) => {
-      this.tweets = data
-    })
+    this.fetchTweets(()=>{})
   }
 
   async handleRefresh(event: any) {
-    this.getFeed().subscribe((data: any) => {
-      this.tweets = data
+    this.fetchTweets(()=>{
       event.target.complete()
     })
   }
-  
-  getFeed() {
-    return this.http.get(env.api+'tweets?offset=0&limit=10', { headers: this.header })
-  }
 
+  fetchTweets(end: Function) {
+    this.http.get(env.api+'tweets?offset=0&limit=10', { headers: this.header }).subscribe((data: any) => {
+      this.tweets = data
+      end()
+    })
+  }
 
   openNewTweet() {
     this.showNewTweet = true;
