@@ -9,6 +9,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 import { SharedTweetComponentModule } from 'src/app/components/tweet/shared-tweet-component.module';
 import { NewTweetComponent } from 'src/app/components/new-tweet/new-tweet.component';
+//import { ModalModule } from 'src/app/components/modal/modal.module';
 //import { SharedNewTweetComponentModule } from 'src/app/components/new-tweet/shared-new-tweet-component.module';
 //import { SharedComponentsModule } from 'src/app/components/shared-components.module';
 
@@ -20,6 +21,7 @@ import { NewTweetComponent } from 'src/app/components/new-tweet/new-tweet.compon
     IonicModule,
     HomePageRoutingModule,
     SharedTweetComponentModule,
+    //ModalModule
     //SharedNewTweetComponentModule
     //SharedComponentsModule
   ],

@@ -26,9 +26,13 @@
     </ion-row>
     <ion-row class="ion-justify-content-start">
       <ion-col>
-        <ion-button fill="clear" color="medium" size="small">
-          <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
-          {{ tweet.post_comments }}
+        <ion-button
+          [id]="tweet.post_id" 
+          fill="clear" 
+          color="medium" 
+          size="small"
+        >
+          <ion-icon name="chatbubble-outline" slot="start"></ion-icon>{{ tweet.post_comments }}
         </ion-button>
       </ion-col>
       <!--
@@ -68,3 +72,26 @@
     </ion-row>
   </ion-col>
 </ion-row>
+
+<ion-content>
+
+  <ion-modal [trigger]="tweet.post_id">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-icon
+            name="arrow-back-outline"
+            (click)="cancelTweetModal()"
+            class="handle-back-button"
+            size="small"
+          ></ion-icon>
+        </ion-buttons>
+        <ion-title>Post</ion-title>
+      </ion-toolbar>
+    </ion-header>
+      <ion-content class="ion-padding">
+        <ion-label>{{ tweet.post_content }}</ion-label>
+      </ion-content>
+  </ion-modal>
+
+</ion-content>

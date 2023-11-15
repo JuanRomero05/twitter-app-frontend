@@ -1,9 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ViewEncapsulation } from "@angular/core";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment as env } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
-import { AlertController } from '@ionic/angular';
+import { AlertController, IonModal } from '@ionic/angular';
 
 @Component({
   selector: 'app-tweet',
@@ -14,14 +14,24 @@ import { AlertController } from '@ionic/angular';
 export class TweetComponent implements OnInit {
 
   @Input() tweet: any;
+  @Input() index: number;
 
   constructor(
-    public alertController: AlertController, 
-    private http: HttpClient
-  ) { }
+    public alertController: AlertController,
+    private http: HttpClient,
+  ) {
+    this.tweetModal = null as any
+    this.index = 0
+  }
+
+  @ViewChild(IonModal) tweetModal: IonModal;
 
   ngOnInit() {
     this.parseTweet();
+  }
+
+  cancelTweetModal() {
+    this.tweetModal.dismiss(null, 'cancel');
   }
 
   parseTweet() {
@@ -45,13 +55,13 @@ export class TweetComponent implements OnInit {
     const id = await Preferences.get({ key: 'id' })
     const headers = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
     const body = { user_id: id.value, post_id: tweet.post_id }
-    
-    this.http.post(env.api+'likes', body, { headers: headers})
+
+    this.http.post(env.api + 'likes', body, { headers: headers })
       .subscribe(() => {
         if (tweet.liked)
           tweet.post_likes--
         else
-          tweet.post_likes++ 
+          tweet.post_likes++
 
         tweet.liked = !tweet.liked
       }, async (err) => {
