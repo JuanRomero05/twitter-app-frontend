@@ -20,7 +20,7 @@ export class HomePage implements OnInit {
 
   token: string | null = ''
 
-  header: HttpHeaders = new HttpHeaders() 
+  header: HttpHeaders = new HttpHeaders()
 
   showNewTweet = false;
 
@@ -36,20 +36,20 @@ export class HomePage implements OnInit {
   }
 
   // cada vez que se accede al componente, se recargan los datos
-  async ionViewWillEnter(){
+  async ionViewWillEnter() {
     this.loading.present()
 
     const token = await Preferences.get({ key: 'token' })
     this.token = token.value
     this.header = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
 
-    this.fetchTweets(()=>{
+    this.fetchTweets(() => {
       this.offset = this.offset + this.limit
       this.loading.dismiss(null, 'cancel')
     })
   }
 
-  async ionViewWillLeave(){
+  async ionViewWillLeave() {
     this.tweets = []
     this.offset = 0
   }
@@ -57,7 +57,7 @@ export class HomePage implements OnInit {
   async handleRefresh(event: any) {
     this.tweets = []
     this.offset = 0
-    this.fetchTweets(()=>{
+    this.fetchTweets(() => {
       event.target.complete()
     })
   }
@@ -65,13 +65,13 @@ export class HomePage implements OnInit {
   handleScroll(event: any) {
     this.fetchTweets(() => {
       this.offset = this.offset + this.limit
-      console.log(this.offset)
+      //console.log(this.offset)
       event?.target.complete()
     })
   }
 
   fetchTweets(end: Function) {
-    this.http.get(env.api+`tweets?offset=${this.offset}&limit=${this.limit}`, { headers: this.header }).subscribe((data: any) => {
+    this.http.get(env.api + `tweets?offset=${this.offset}&limit=${this.limit}`, { headers: this.header }).subscribe((data: any) => {
       this.tweets = [...this.tweets, ...data]
       end()
     })

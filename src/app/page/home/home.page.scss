@@ -1,13 +1,19 @@
-
 ion-toolbar {
      --border-style: none;
 }
- 
+
 ion-segment {
      z-index: 10;
 }
- 
+
 ion-avatar {
      border: 2px solid var(--ion-color-primary);
      padding: 2px;
+}
+
+ion-loading.custom-loading {
+     --background: #121212;
+     --spinner-color: #428cff;
+
+     color: #428cff;
 }

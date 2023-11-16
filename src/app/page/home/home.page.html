@@ -1,4 +1,4 @@
-<ion-loading #loading></ion-loading>
+<ion-loading #loading spinner="crescent" class="custom-loading"></ion-loading>
 
 <ion-header #header>
   <ion-toolbar>
@@ -33,6 +33,6 @@
   <app-new-tweet [modalTrigger]="'createTweet'"></app-new-tweet>
 
   <ion-infinite-scroll (ionInfinite)="handleScroll($event)">
-    <ion-infinite-scroll-content loadingSpinner="bubbles"></ion-infinite-scroll-content>
+    <ion-infinite-scroll-content loadingSpinner="crescent"></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 </ion-content>

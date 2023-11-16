@@ -36,11 +36,18 @@
      padding-right: 3px;
 }
 
-.btn-width{
+.btn-width {
      width: 80px;
 }
 
-   
+ion-loading.custom-loading {
+     --background: #121212;
+     --spinner-color: #428cff;
+
+     color: #428cff;
+}
+
+
 /* .profile-label:first-of-type {
      margin-left: 5px;
      margin-top: 10px;
