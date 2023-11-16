@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { IonModal, AlertController, IonMenu } from '@ionic/angular';
+import { IonModal, AlertController, IonMenu, IonLoading } from '@ionic/angular';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment as env } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
@@ -26,6 +26,7 @@ export class ProfilePage implements OnInit {
     this.modalFollowers = null as any
     this.modalEditProfile = null as any
     this.menu = null as any
+    this.loading = null as any
 
     this.editProfileForm = this.fb.group({
       'firstName': new FormControl,
@@ -43,6 +44,8 @@ export class ProfilePage implements OnInit {
 
   @ViewChild('passwordInput') passwordInput: any;
   @ViewChild('repeatPasswordInput') repeatPasswordInput: any;
+
+  @ViewChild('loading') loading: IonLoading;
 
   showPassword: boolean = false;
   showRepeatPassword: boolean = false;
@@ -89,13 +92,17 @@ export class ProfilePage implements OnInit {
 
   // cada vez que se ingresa al perfil, se recargan los datos
   async ionViewWillEnter() {
+    this.loading.present()
+
     const token = await Preferences.get({ key: 'token' })
     const id = await Preferences.get({ key: 'id' })
 
     this.token = token.value
     this.id = id.value
     this.header =  new HttpHeaders().append('Authorization', `Bearer ${this.token}`)
-    this.fetchProfileData(()=>{})
+    this.fetchProfileData(()=>{
+      this.loading.dismiss(null, 'cancel')
+    })
   }
 
   // end es el codigo que se ejecuta una vez se hayan obtenido todos los datos del perfil

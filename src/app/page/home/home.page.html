@@ -1,3 +1,5 @@
+<ion-loading #loading></ion-loading>
+
 <ion-header #header>
   <ion-toolbar>
     <ion-title class="ion-text-center">
@@ -16,7 +18,7 @@
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  
+
   <div>
     <app-tweet *ngFor="let tweet of tweets" [tweet]="tweet"></app-tweet>
   </div>
@@ -29,4 +31,8 @@
 
   <!-- Este componente se mostrará unicamente cuando shoNewTweet cambie a true -->
   <app-new-tweet [modalTrigger]="'createTweet'"></app-new-tweet>
+
+  <ion-infinite-scroll (ionInfinite)="handleScroll($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
