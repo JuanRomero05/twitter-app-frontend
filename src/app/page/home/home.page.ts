@@ -22,26 +22,29 @@ export class HomePage implements OnInit {
   constructor(private http: HttpClient) { }
 
   async ngOnInit() {
+  }
+
+  // cada vez que se accede al componente, se recargan los datos
+  async ionViewWillEnter(){
     const token = await Preferences.get({ key: 'token' })
     this.token = token.value
     this.header = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
 
-    this.getFeed().subscribe((data: any) => {
-      this.tweets = data
-    })
+    this.fetchTweets(()=>{})
   }
 
   async handleRefresh(event: any) {
-    this.getFeed().subscribe((data: any) => {
-      this.tweets = data
+    this.fetchTweets(()=>{
       event.target.complete()
     })
   }
-  
-  getFeed() {
-    return this.http.get(env.api+'tweets?offset=0&limit=10', { headers: this.header })
-  }
 
+  fetchTweets(end: Function) {
+    this.http.get(env.api+'tweets?offset=0&limit=10', { headers: this.header }).subscribe((data: any) => {
+      this.tweets = data
+      end()
+    })
+  }
 
   openNewTweet() {
     this.showNewTweet = true;

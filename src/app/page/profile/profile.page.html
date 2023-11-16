@@ -6,7 +6,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-menu side="end" contentId="main-content">
+<ion-menu #menu side="end" contentId="main-content">
   <ion-content class="ion-padding">
     <ion-buttons>
       <ion-button
@@ -36,26 +36,31 @@
   </ion-content>
 </ion-menu>
 
+
+<ion-content>
 <div class="ion-page" id="main-content">
-  <div class="ion-padding">
-    <div class="profile-label">
-      <ion-label class="handle-title"
-        >{{user.first_name}} {{user.last_name}}</ion-label
-      >
-      <ion-label class="handle">@{{user.alias}}</ion-label>
+      <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
+    <div class="ion-padding">
+      <div class="profile-label">
+        <ion-label class="handle-title"
+          >{{user.first_name}} {{user.last_name}}</ion-label
+        >
+        <ion-label class="handle">@{{user.alias}}</ion-label>
+      </div>
+      <ion-text class="profile-bio handle">{{ user.biography }}</ion-text>
     </div>
-    <ion-text class="profile-bio handle">{{ user.biography }}</ion-text>
-  </div>
-  <div>
-    <ion-button id="open-modal-following" fill="clear" color="dark">
-      <ion-label class="padding-numbers">{{user.user_followings}}</ion-label>
-      <ion-label class="handle">Following</ion-label>
-    </ion-button>
-    <ion-button id="open-modal-followers" fill="clear" color="dark">
-      <ion-label class="padding-numbers">{{ user.user_followers }}</ion-label>
-      <ion-label class="handle">Followers</ion-label>
-    </ion-button>
-  </div>
+    <div>
+      <ion-button id="open-modal-following" fill="clear" color="dark">
+        <ion-label class="padding-numbers">{{user.user_followings}}</ion-label>
+        <ion-label class="handle">Following</ion-label>
+      </ion-button>
+      <ion-button id="open-modal-followers" fill="clear" color="dark">
+        <ion-label class="padding-numbers">{{ user.user_followers }}</ion-label>
+        <ion-label class="handle">Followers</ion-label>
+      </ion-button>
+    </div>
 
   <ion-segment [(ngModel)]="segment">
     <ion-segment-button value="posts">
@@ -234,3 +239,4 @@
     <app-new-tweet *ngIf="showNewTweet"></app-new-tweet>
   </ion-content>
 </div>
+</ion-content>
