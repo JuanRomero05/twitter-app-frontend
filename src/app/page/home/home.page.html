@@ -22,11 +22,11 @@
   </div>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="openNewTweet()">
+    <ion-fab-button id="createTweet">
       <ion-icon name="add-outline" size="large"> </ion-icon>
     </ion-fab-button>
   </ion-fab>
 
   <!-- Este componente se mostrará unicamente cuando shoNewTweet cambie a true -->
-  <app-new-tweet *ngIf="showNewTweet"></app-new-tweet>
+  <app-new-tweet [modalTrigger]="'createTweet'"></app-new-tweet>
 </ion-content>
