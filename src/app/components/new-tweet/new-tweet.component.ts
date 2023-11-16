@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Preferences } from '@capacitor/preferences';
 import { ActionSheetController, AlertController, IonModal } from '@ionic/angular';
@@ -13,8 +13,9 @@ import { environment as env } from 'src/environments/environment';
 })
 export class NewTweetComponent implements OnInit {
 
+  @Input() modalTrigger: any
+
   newTweetForm: FormGroup;
-  isModalOpen: boolean;
   token: string | null = ''
   id: string | null = ''
   header: HttpHeaders = new HttpHeaders()
@@ -26,7 +27,6 @@ export class NewTweetComponent implements OnInit {
     private alertController: AlertController
   ) {
     this.modal = null as any
-    this.isModalOpen = true;
     this.newTweetForm = this.fb.group({
       'newTweet': new FormControl("", Validators.required),
     });
@@ -35,9 +35,7 @@ export class NewTweetComponent implements OnInit {
 
   @ViewChild(IonModal) modal: IonModal;
 
-  ngOnInit() { }
-
-  async ionViewWillEnter(){
+  async ngOnInit() { 
     const token = await Preferences.get({ key: "token" })
     const id = await Preferences.get({ key: "id" })
 
@@ -69,6 +67,7 @@ export class NewTweetComponent implements OnInit {
         const alert = await this.createAlert('Post created', 'Your tweet has been published.')
         alert.present()
         // salirse del modal
+        this.newTweetForm.controls['newTweet'].setValue('')
         this.modal.dismiss(null, 'cancel')
       }, async (err: any) => {
         const alert = await this.createAlert('Failure', err.error.msg)
@@ -89,6 +88,7 @@ export class NewTweetComponent implements OnInit {
           {
             text: 'Confirm',
             handler: () => {
+              this.newTweetForm.controls['newTweet'].setValue('')
               this.modal.dismiss(null, 'cancel')
             }
           },
@@ -99,8 +99,6 @@ export class NewTweetComponent implements OnInit {
         ]
       });
       await actionSheet.present();
-    } else {
-      this.isModalOpen = false;
-    }
+    } 
   }
 }
