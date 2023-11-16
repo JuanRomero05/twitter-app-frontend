@@ -54,6 +54,10 @@ export class TweetComponent implements OnInit {
     return alert
   }
 
+  formatDate = (timestamp: string) => {
+    return new Date(timestamp).toLocaleDateString()
+  }
+
   handleLike = async (tweet: any) => {
     // se agrega o se elimina el like en la bd
     const token = await Preferences.get({ key: 'token' })

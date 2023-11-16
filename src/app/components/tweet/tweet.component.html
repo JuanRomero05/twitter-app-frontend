@@ -13,7 +13,7 @@
         <span class="name">{{ tweet.first_name }} {{ tweet.last_name }}</span>
         <span class="handle">@{{ tweet.alias }}</span>
         <span class="handle"
-        >- {{ tweet.creation_date }}</span
+        >- {{ formatDate(tweet.creation_date) }}</span
       >
       </ion-col>
     </ion-row>
