@@ -21,8 +21,10 @@ export class TweetComponent implements OnInit {
   isModalProfileOpen = false;
   isModalFollowingOpen = false;
   isModalFollowersOpen = false;
+  isModalEditReplyOpen = false;
 
   replyForm: FormGroup;
+  replyEditForm: FormGroup;
 
   token: string | null = ''
   id: string | null = ''
@@ -40,6 +42,10 @@ export class TweetComponent implements OnInit {
 
     this.replyForm = this.fb.group({
       'tweet-reply': new FormControl,
+    })
+
+    this.replyEditForm = this.fb.group({
+      'edit-reply': new FormControl
     })
   }
 
@@ -59,19 +65,19 @@ export class TweetComponent implements OnInit {
     this.header = new HttpHeaders().append('Authorization', `Bearer ${this.token}`)
 
     // se verifica si el usuario tiene permisos sobre el tweet
-    if (this.tweet.user_id == this.id){
+    if (this.tweet.user_id == this.id) {
       this.canBeDeleted = true
     }
 
     // si es un tweet, se buscan los comentarios del mismo
     if (!this.isComment)
-      this.http.get(env.api+`tweets/${this.tweet.post_id}/comments`, {headers: this.header})
-      .subscribe((data: any) => {
-        this.comments = data
-      }, async () => {
-        const alert = await this.createAlert('Failure', 'Something went wrong while fetching tweets.')
-        alert.present()
-      })
+      this.http.get(env.api + `tweets/${this.tweet.post_id}/comments`, { headers: this.header })
+        .subscribe((data: any) => {
+          this.comments = data
+        }, async () => {
+          const alert = await this.createAlert('Failure', 'Something went wrong while fetching tweets.')
+          alert.present()
+        })
   }
 
   handleFollow() {
@@ -95,6 +101,10 @@ export class TweetComponent implements OnInit {
     this.isModalFollowersOpen = isOpen
   }
 
+  openModalEditReply(isOpen: boolean) {
+    this.isModalEditReplyOpen = isOpen
+  }
+
   async deleteTweet(tweet: any) {
     let resource = ''
     if (this.isComment) {
@@ -110,13 +120,13 @@ export class TweetComponent implements OnInit {
         {
           text: 'Confirm',
           handler: () => {
-            this.http.delete(env.api+`${resource}/${tweet.post_id}`, { headers: this.header })
-            .subscribe(() => {
-              this.exists = false
-            }, async (err) => {
-              const alert = await this.createAlert('Failure', err.error.msg)
-              alert.present()
-            })
+            this.http.delete(env.api + `${resource}/${tweet.post_id}`, { headers: this.header })
+              .subscribe(() => {
+                this.exists = false
+              }, async (err) => {
+                const alert = await this.createAlert('Failure', err.error.msg)
+                alert.present()
+              })
           }
         },
         {
@@ -136,6 +146,11 @@ export class TweetComponent implements OnInit {
 
   postReply() {
     console.log('mira tonto estoy publicando un comentario estaticamente jjajajaja');
+
+  }
+
+  editReply() {
+    console.log('el tonto de nuevo ve cm estoy editando un comentario estaticamente jajaja');
 
   }
 
