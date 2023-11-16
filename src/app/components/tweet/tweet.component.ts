@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ViewEncapsulation } from "@angular/core";
+//import { ViewEncapsulation } from "@angular/core";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment as env } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
@@ -10,13 +10,16 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
   selector: 'app-tweet',
   templateUrl: './tweet.component.html',
   styleUrls: ['./tweet.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class TweetComponent implements OnInit {
 
   @Input() tweet: any;
 
   isModalOpen = false;
+  isModalProfileOpen = false;
+  isModalFollowingOpen = false;
+  isModalFollowersOpen = false;
 
   replyForm: FormGroup;
 
@@ -25,17 +28,40 @@ export class TweetComponent implements OnInit {
     private http: HttpClient,
     public fb: FormBuilder
   ) {
+
     this.replyForm = this.fb.group({
       'tweet-reply': new FormControl,
     })
   }
 
+  segment: string = 'postsProfile';
+
+  isFollowing: boolean = false;
+
   ngOnInit() {
     this.parseTweet();
+    this.segment = 'postsProfile';
   }
+
+  handleFollow() {
+    this.isFollowing = !this.isFollowing;
+  }
+
 
   setOpen(isOpen: boolean) {
     this.isModalOpen = isOpen;
+  }
+
+  openModalProfile(isOpen: boolean) {
+    this.isModalProfileOpen = isOpen
+  }
+
+  openModalFollowing(isOpen: boolean) {
+    this.isModalFollowingOpen = isOpen
+  }
+
+  openModalFollowers(isOpen: boolean) {
+    this.isModalFollowersOpen = isOpen
   }
 
   parseTweet() {

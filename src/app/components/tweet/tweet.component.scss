@@ -2,6 +2,10 @@
      width: 80px;
 }
 
+.btn-width2 {
+     width: 90px;
+}
+
 .tweet-info {
      font-size: 0.9em;
 }
@@ -11,7 +15,11 @@
 }
 
 .handle {
-     padding-top: 4px;
+     color: var(--ion-color-medium);
+}
+
+.handle {
+     padding-top: 2px;
      color: var(--ion-color-medium);
 }
 
@@ -74,4 +82,45 @@
      margin-top: 6px;
      padding-top: 0px;
      padding-bottom: 0px;
+}
+
+/* Css profile */
+.profile-label {
+     display: flex;
+     flex-direction: column;
+     /* margin-left: 5px; */
+     /* margin-top: 10px; */
+     //margin-top: 5px;
+     margin-bottom: 10px;
+}
+
+.profile-bio {
+     display: flex;
+     flex-direction: column;
+}
+
+.profile-statistics {
+     /* padding-left: 5px; */
+     margin-top: 10px;
+     /* padding-bottom: 10px; */
+}
+
+.handle-profile {
+     /* padding-left: 4px; */
+     margin-top: 4px;
+     color: var(--ion-color-medium);
+}
+
+.handle-title {
+     font-size: 20px;
+     font-weight: bold;
+}
+
+.handle-back-button {
+     margin-left: 15px;
+}
+
+.padding-numbers {
+     padding-right: 4px;
+     /* padding-top: 5px; */
 }

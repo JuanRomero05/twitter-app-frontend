@@ -1,11 +1,15 @@
 <ion-row class="wrapper">
   <ion-col size="2">
-    <ion-avatar class="custom-avatar">
-      <ion-img 
-        [src]="'https://firebasestorage.googleapis.com/v0/b/mobile-apps-d0b43.appspot.com/o/twitter-posts%2Fprofile.jpg?alt=media&token=336149f6-3a78-4d60-a2f6-7b26d8a12a55'"
-      >
-      </ion-img>
-    </ion-avatar>
+    <ion-buttons>
+      <ion-button (click)="openModalProfile(true)">
+        <ion-avatar class="custom-avatar">
+          <ion-img 
+            [src]="'https://firebasestorage.googleapis.com/v0/b/mobile-apps-d0b43.appspot.com/o/twitter-posts%2Fprofile.jpg?alt=media&token=336149f6-3a78-4d60-a2f6-7b26d8a12a55'"
+          >
+          </ion-img>
+        </ion-avatar>
+      </ion-button>
+    </ion-buttons>
   </ion-col>
   <ion-col size="10">
     <ion-row class="tweet-info">
@@ -280,6 +284,130 @@
           <ion-col size="2"></ion-col>
         </ion-row>
       </ion-content>
+  </ion-modal>
+
+  <ion-modal [isOpen]="isModalProfileOpen">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-icon
+            name="arrow-back-outline"
+            (click)="openModalProfile(false)"
+            class="handle-back-button"
+            size="small"
+          ></ion-icon>
+        </ion-buttons>
+        <ion-title>Nombre y apellido</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-row class="ion-padding">
+      
+          <ion-col size="9">
+            <ion-row class="profile-label">
+              <ion-label class="handle-title">Juan Romero</ion-label>
+              <ion-label class="handle-profile">@jj</ion-label>
+            </ion-row>
+          </ion-col>
+          <ion-col size="3">
+            <ion-button 
+            class="btn-width2"
+            shape="round" 
+            fill="outline" 
+            (click)="handleFollow()"
+            [color]="isFollowing ? 'danger' : 'dark'"
+            >
+              {{ isFollowing ? 'Unfollow' : 'Follow' }}
+            </ion-button>
+          </ion-col>
+
+          <ion-col size="12">
+            <ion-row>
+              <ion-label>bio</ion-label>
+            </ion-row>
+          </ion-col>
+        
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="12">
+            <ion-row>
+              <ion-button (click)="openModalFollowing(true)" fill="clear" color="dark">
+                <ion-label class="padding-numbers">0</ion-label>
+                <ion-label class="handle-btn">Following</ion-label>
+              </ion-button>
+              <ion-button (click)="openModalFollowers(true)" fill="clear" color="dark">
+                <ion-label class="padding-numbers">1</ion-label>
+                <ion-label class="handle-btn">Followers</ion-label>
+              </ion-button>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      
+      <ion-segment ngDefaultControl [(ngModel)]="segment">
+        <ion-segment-button value="postsProfile">
+          <ion-label>Posts</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="repliesProfile">
+          <ion-label>Replies</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="likesProfile">
+          <ion-label>Likes</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+
+      <div *ngIf="segment === 'postsProfile'">
+        <ion-label>postsSS</ion-label>
+      </div>
+  
+      <div *ngIf="segment === 'repliesProfile'">
+        <ion-label>replies</ion-label>
+      </div>
+  
+      <div *ngIf="segment === 'likesProfile'">
+        <ion-label>likes</ion-label>
+      </div>
+
+      <ion-modal [isOpen]="isModalFollowersOpen">
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-icon
+                  name="arrow-back-outline"
+                  (click)="openModalFollowers(false)"
+                  class="handle-back-button"
+                  size="small"
+                ></ion-icon>
+              </ion-buttons>
+              <ion-title>Followers</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding">
+            <!-- <app-users *ngFor="let user of followers" [user]="user"></app-users> -->
+          </ion-content>
+      </ion-modal>
+
+      <ion-modal [isOpen]="isModalFollowingOpen">
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-icon
+                name="arrow-back-outline"
+                (click)="openModalFollowing(false)"
+                class="handle-back-button"
+                size="small"
+              ></ion-icon>
+            </ion-buttons>
+            <ion-title>Following</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <!-- <app-users *ngFor="let user of followers" [user]="user"></app-users> -->
+        </ion-content>
+    </ion-modal>
+
+    </ion-content>
   </ion-modal>
 
 </ion-content>
