@@ -35,9 +35,7 @@ export class NewTweetComponent implements OnInit {
 
   @ViewChild(IonModal) modal: IonModal;
 
-  ngOnInit() { }
-
-  async ionViewWillEnter(){
+  async ngOnInit() { 
     const token = await Preferences.get({ key: "token" })
     const id = await Preferences.get({ key: "id" })
 
