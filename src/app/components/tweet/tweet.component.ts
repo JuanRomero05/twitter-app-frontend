@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment as env } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
 import { AlertController, IonModal } from '@ionic/angular';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-tweet',
@@ -26,10 +26,9 @@ export class TweetComponent implements OnInit {
     public fb: FormBuilder
   ) {
     this.replyForm = this.fb.group({
-      'reply': new FormControl,
+      'tweet-reply': new FormControl,
     })
   }
-
 
   ngOnInit() {
     this.parseTweet();
@@ -44,6 +43,11 @@ export class TweetComponent implements OnInit {
     this.tweet.text = this.tweet.post_content.replace(/@[a-zA-Z]+/g, "<span>$&</span>");
   }
 
+  postReply() {
+    console.log('mira tonto estoy publicando un comentario estaticamente jjajajaja');
+
+  }
+
   createAlert = async (header: string, message: string) => {
     const alert = await this.alertController.create({
       header,
@@ -55,7 +59,17 @@ export class TweetComponent implements OnInit {
   }
 
   formatDate = (timestamp: string) => {
-    return new Date(timestamp).toLocaleDateString()
+    const formattedDate = new Date(timestamp).toLocaleString('es-ES', {
+      hour: '2-digit',
+      minute: '2-digit',
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour12: true
+    });
+
+    const [time, date] = formattedDate.split(', ');
+    return `${date} - ${time}`;
   }
 
   handleLike = async (tweet: any) => {

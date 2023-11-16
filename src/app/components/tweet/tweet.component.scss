@@ -1,3 +1,7 @@
+.btn-width {
+     width: 80px;
+}
+
 .tweet-info {
      font-size: 0.9em;
 }
@@ -7,7 +11,7 @@
 }
 
 .handle {
-     padding-left: 4px;
+     padding-top: 4px;
      color: var(--ion-color-medium);
 }
 
@@ -16,6 +20,12 @@
 }
 
 .wrapper {
+     border-bottom: 1px solid var(--ion-color-light);
+}
+
+.wrapper-comment {
+     margin-top: 15px;
+     border-top: 1px solid var(--ion-color-light);
      border-bottom: 1px solid var(--ion-color-light);
 }
 
@@ -52,7 +62,12 @@
 }
 
 .form {
-     margin-top: 20px;
+     margin-top: 10px;
+}
+
+.handle-card {
+     padding: 0;
+     margin: 0;
 }
 
 .handle-col {
