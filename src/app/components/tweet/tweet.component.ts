@@ -3,7 +3,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment as env } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
-import { AlertController, IonModal } from '@ionic/angular';
+import { ActionSheetController, AlertController, IonModal } from '@ionic/angular';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -23,10 +23,17 @@ export class TweetComponent implements OnInit {
 
   replyForm: FormGroup;
 
+  token: string | null = ''
+  id: string | null = ''
+  header: HttpHeaders = new HttpHeaders()
+  exists: boolean = true
+  canBeDeleted: boolean = false
+
   constructor(
     public alertController: AlertController,
     private http: HttpClient,
-    public fb: FormBuilder
+    public fb: FormBuilder,
+    private actionSheetController: ActionSheetController,
   ) {
 
     this.replyForm = this.fb.group({
@@ -38,9 +45,21 @@ export class TweetComponent implements OnInit {
 
   isFollowing: boolean = false;
 
-  ngOnInit() {
+  async ngOnInit() {
     this.parseTweet();
     this.segment = 'postsProfile';
+
+    const token = await Preferences.get({ key: 'token' })
+    const id = await Preferences.get({ key: 'id' })
+
+    this.token = token.value
+    this.id = id.value
+    this.header = new HttpHeaders().append('Authorization', `Bearer ${this.token}`)
+
+    // se verifica si el usuario tiene permisos sobre el tweet
+    if (this.tweet.user_id == this.id){
+      this.canBeDeleted = true
+    }
   }
 
   handleFollow() {
@@ -62,6 +81,33 @@ export class TweetComponent implements OnInit {
 
   openModalFollowers(isOpen: boolean) {
     this.isModalFollowersOpen = isOpen
+  }
+
+  async deleteTweet(tweet: any) {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Close?',
+      subHeader: 'Are you sure you want to delete this tweet?',
+      buttons: [
+        {
+          text: 'Confirm',
+          handler: () => {
+            this.http.delete(env.api+`tweets/${tweet.post_id}`, { headers: this.header })
+            .subscribe(() => {
+              this.exists = false
+            }, async (err) => {
+              const alert = await this.createAlert('Failure', err.error.msg)
+              alert.present()
+            })
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        }
+      ]
+    });
+
+    await actionSheet.present();
   }
 
   parseTweet() {
@@ -100,12 +146,9 @@ export class TweetComponent implements OnInit {
 
   handleLike = async (tweet: any) => {
     // se agrega o se elimina el like en la bd
-    const token = await Preferences.get({ key: 'token' })
-    const id = await Preferences.get({ key: 'id' })
-    const headers = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
-    const body = { user_id: id.value, post_id: tweet.post_id }
+    const body = { user_id: this.id, post_id: tweet.post_id }
 
-    this.http.post(env.api + 'likes', body, { headers: headers })
+    this.http.post(env.api + 'likes', body, { headers: this.header })
       .subscribe(() => {
         if (tweet.liked)
           tweet.post_likes--

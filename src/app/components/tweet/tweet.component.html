@@ -1,4 +1,4 @@
-<ion-row class="wrapper">
+<ion-row class="wrapper" *ngIf="exists">
   <ion-col size="2">
     <ion-buttons>
       <ion-button (click)="openModalProfile(true)">
@@ -63,11 +63,12 @@
         </ion-button>
       </ion-col>
 
-      <ion-col>
+      <ion-col *ngIf="canBeDeleted">
         <ion-button
           fill="clear"
           color="medium"
           size="small"
+          (click)="deleteTweet(tweet)"
         >
           <ion-icon name="trash-outline" slot="start"></ion-icon>
         </ion-button>
@@ -202,7 +203,7 @@
           </ion-card>
         </div>
 
-        <!-- REPLY'S SECTION -->
+        <!-- Comentarios -->
         <ion-row class="wrapper-comment">
           <ion-col size="2">
             <ion-avatar class="custom-avatar">
@@ -286,6 +287,7 @@
       </ion-content>
   </ion-modal>
 
+  <!--Perfil-->
   <ion-modal [isOpen]="isModalProfileOpen">
     <ion-header>
       <ion-toolbar>
