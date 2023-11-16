@@ -15,6 +15,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 export class TweetComponent implements OnInit {
 
   @Input() tweet: any;
+  @Input() isComment: any;
 
   isModalOpen = false;
   isModalProfileOpen = false;
@@ -28,6 +29,7 @@ export class TweetComponent implements OnInit {
   header: HttpHeaders = new HttpHeaders()
   exists: boolean = true
   canBeDeleted: boolean = false
+  comments: any[] = []
 
   constructor(
     public alertController: AlertController,
@@ -60,6 +62,16 @@ export class TweetComponent implements OnInit {
     if (this.tweet.user_id == this.id){
       this.canBeDeleted = true
     }
+
+    // si es un tweet, se buscan los comentarios del mismo
+    if (!this.isComment)
+      this.http.get(env.api+`tweets/${this.tweet.post_id}/comments`, {headers: this.header})
+      .subscribe((data: any) => {
+        this.comments = data
+      }, async () => {
+        const alert = await this.createAlert('Failure', 'Something went wrong while fetching tweets.')
+        alert.present()
+      })
   }
 
   handleFollow() {
@@ -84,6 +96,13 @@ export class TweetComponent implements OnInit {
   }
 
   async deleteTweet(tweet: any) {
+    let resource = ''
+    if (this.isComment) {
+      resource = 'comments'
+    } else {
+      resource = 'tweets'
+    }
+
     const actionSheet = await this.actionSheetController.create({
       header: 'Close?',
       subHeader: 'Are you sure you want to delete this tweet?',
@@ -91,7 +110,7 @@ export class TweetComponent implements OnInit {
         {
           text: 'Confirm',
           handler: () => {
-            this.http.delete(env.api+`tweets/${tweet.post_id}`, { headers: this.header })
+            this.http.delete(env.api+`${resource}/${tweet.post_id}`, { headers: this.header })
             .subscribe(() => {
               this.exists = false
             }, async (err) => {

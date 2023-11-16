@@ -37,7 +37,18 @@
     </ion-row>
 
     <ion-row class="ion-justify-content-start">
-      <ion-col>
+      <!--Editar-->
+      <ion-col size="3" class="handle-col" *ngIf="isComment">
+        <ion-button
+          fill="clear" 
+          color="medium" 
+          size="small"
+        >
+          <ion-icon name="create-outline" slot="start"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <!--Comentar-->
+      <ion-col *ngIf="!isComment">
         <ion-button
           (click)="setOpen(true)"
           fill="clear" 
@@ -80,7 +91,7 @@
 
 <ion-content>
 
-  <ion-modal [isOpen]="isModalOpen">
+  <ion-modal [isOpen]="isModalOpen" *ngIf="!isComment">
       <ion-header>
         <ion-toolbar>
           <ion-buttons slot="start">
@@ -141,16 +152,6 @@
           <ion-col size="2"></ion-col>
           <ion-col size="3" class="handle-col">
             <ion-button
-              fill="clear" 
-              color="medium" 
-              size="small"
-            >
-              <ion-icon name="chatbubble-outline" slot="start"></ion-icon>{{ tweet.post_comments }}
-            </ion-button>
-          </ion-col>
-        
-          <ion-col size="3" class="handle-col">
-            <ion-button
               (click)="handleLike(tweet)"
               fill="clear"
               [color]="tweet.liked ? 'danger' : 'medium'"
@@ -164,7 +165,7 @@
             </ion-button>
           </ion-col>
 
-          <ion-col size="3" class="handle-col">
+          <ion-col size="3" class="handle-col" *ngIf="canBeDeleted">
             <ion-button
               fill="clear"
               color="medium"
@@ -203,7 +204,11 @@
           </ion-card>
         </div>
 
-        <!-- Comentarios -->
+        <!--Comentarios--> 
+        <div>
+          <app-tweet *ngFor="let comment of comments" [tweet]="comment" [isComment]="true"></app-tweet>
+        </div>
+        <!--
         <ion-row class="wrapper-comment">
           <ion-col size="2">
             <ion-avatar class="custom-avatar">
@@ -229,12 +234,15 @@
             <ion-row> 
               <ion-col size="12">
                 <div class="custom-text">texto</div>
+              -->
                 <!-- <div class="custom-text" [innerHtml]="tweet.post_content"></div>COLOCAR img y texto
                 <img 
                   class="preview-img"
                   [src]="tweet.image_url"
                   *ngIf="tweet.image_url"
                 /> -->
+              
+              <!--
               </ion-col>
             </ion-row>
 
@@ -284,6 +292,7 @@
           </ion-col>
           <ion-col size="2"></ion-col>
         </ion-row>
+        -->
       </ion-content>
   </ion-modal>
 
