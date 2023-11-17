@@ -206,6 +206,50 @@
       </ion-content>
   </ion-modal>
 
+  <!-- Edit reply modal -->
+  <ion-modal [isOpen]="isModalEditReplyOpen">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="openModalEditReply(false)">
+            <ion-icon name="close" size="large"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button
+            shape="round"
+            fill="solid"
+            color="primary"
+            class="btn-width"
+            [disabled]="!replyEditForm.get('edit-reply')?.value"
+            [strong]="true"
+            (click)="editReply()"
+            >Edit</ion-button
+          >
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-card class="handle-card">
+
+        <ion-card-content>
+          <form [formGroup]="replyEditForm">
+            <ion-item>
+              <ion-textarea
+                ngDefaultControl
+                formControlName="edit-reply"
+                placeholder="reply content"
+                [counter]="true"
+                maxlength="280"
+              ></ion-textarea>
+            </ion-item>
+          </form>
+        </ion-card-content>
+
+      </ion-card>
+    </ion-content>
+  </ion-modal>
+
   <!--
   <app-user-profile [isProfileOpen]="isModalProfileOpen" [userId]="tweet.user_id"></app-user-profile>
   -->
