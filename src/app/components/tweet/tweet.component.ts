@@ -32,6 +32,7 @@ export class TweetComponent implements OnInit {
   exists: boolean = true
   canBeDeleted: boolean = false
   comments: any[] = []
+  user: any
 
   constructor(
     public alertController: AlertController,
@@ -87,7 +88,6 @@ export class TweetComponent implements OnInit {
   handleFollow() {
     this.isFollowing = !this.isFollowing;
   }
-
 
   setOpen(isOpen: boolean) {
     this.isModalOpen = isOpen;
