@@ -3,8 +3,9 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment as env } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
-import { ActionSheetController, AlertController, IonLoading, IonModal } from '@ionic/angular';
+import { ActionSheetController, AlertController, ModalController, IonLoading, IonModal } from '@ionic/angular';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UserProfileComponent } from '../user-profile/user-profile.component';
 
 @Component({
   selector: 'app-tweet',
@@ -39,6 +40,7 @@ export class TweetComponent implements OnInit {
     private http: HttpClient,
     public fb: FormBuilder,
     private actionSheetController: ActionSheetController,
+    private modalController: ModalController
   ) {
     this.replyForm = this.fb.group({
       'tweet-reply': new FormControl,
@@ -94,7 +96,20 @@ export class TweetComponent implements OnInit {
   }
 
   openModalProfile(isOpen: boolean) {
-    this.isModalProfileOpen = isOpen
+    this.modalController
+      .create({
+        component: UserProfileComponent,
+        componentProps: {
+          userId: this.tweet.user_id
+        }
+      })
+      .then((modal) => {
+        modal.onDidDismiss()
+          .then(() => {
+            
+          })
+          modal.present()
+      })
   }
 
   openModalFollowing(isOpen: boolean) {

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { IonModal, AlertController, IonLoading } from '@ionic/angular';
+import { IonModal, AlertController, IonLoading, ModalController } from '@ionic/angular';
 import { environment as env } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
 
@@ -10,7 +10,6 @@ import { Preferences } from '@capacitor/preferences';
   styleUrls: ['./user-profile.component.scss'],
 })
 export class UserProfileComponent  implements OnInit {
-
   @Input() userId: any
   @Input() isProfileOpen: any
 
@@ -33,7 +32,8 @@ export class UserProfileComponent  implements OnInit {
 
   constructor(    
     private http: HttpClient,
-    public alertController: AlertController
+    public alertController: AlertController,
+    private modalController: ModalController
   ) {
     this.mainModal = null as any
     this.loading = null as any
@@ -50,8 +50,8 @@ export class UserProfileComponent  implements OnInit {
     this.fetchUserData()
   }
 
-  exit(){
-    this.mainModal.dismiss(null, 'cancel')
+  exitModal(){
+    this.modalController.dismiss(null, 'cancel')
   }
 
   fetchUserData(){
