@@ -53,7 +53,7 @@ export class ProfilePage implements OnInit {
   eyeIconRepeat: string = 'eye-outline';
 
   segment: String = 'posts';
-  
+
   user = {
     alias: "",
     first_name: "",
@@ -81,17 +81,25 @@ export class ProfilePage implements OnInit {
 
   showNewTweet = false;
 
+  noDataTweets = false;
+  noDataReplies = false;
+  noDataLikes = false;
+
   async ngOnInit() {
   }
 
   handleRefresh(event: any) {
-    this.fetchProfileData(()=>{
+    this.fetchProfileData(() => {
       event.target.complete()
-    })  
+    })
   }
 
   // cada vez que se ingresa al perfil, se recargan los datos
   async ionViewWillEnter() {
+    this.noDataTweets = false;
+    this.noDataReplies = false;
+    this.noDataLikes = false;
+
     this.loading.present()
 
     const token = await Preferences.get({ key: 'token' })
@@ -99,64 +107,79 @@ export class ProfilePage implements OnInit {
 
     this.token = token.value
     this.id = id.value
-    this.header =  new HttpHeaders().append('Authorization', `Bearer ${this.token}`)
-    this.fetchProfileData(()=>{
+    this.header = new HttpHeaders().append('Authorization', `Bearer ${this.token}`)
+    this.fetchProfileData(() => {
       this.loading.dismiss(null, 'cancel')
     })
   }
 
   // end es el codigo que se ejecuta una vez se hayan obtenido todos los datos del perfil
-  fetchProfileData(end: Function){
+  fetchProfileData(end: Function) {
     // tweets del usuario
     this.http.get(env.api + `users/${this.id}/tweets`, { headers: this.header })
       .subscribe((data: any) => {
+
         this.tweets = data;
-    })
+
+        if (this.tweets.length === 0) {
+          this.noDataTweets = true;
+        }
+      })
 
     // comentarios del usuario
     this.http.get(env.api + `users/${this.id}/comments`, { headers: this.header })
       .subscribe((data: any) => {
-      this.replies = data;
-    })
+
+        this.replies = data;
+
+        if (this.tweets.length === 0) {
+          this.noDataReplies = true;
+        }
+      })
 
     // tweets con like del usuario
     this.http.get(env.api + `users/${this.id}/tweets/liked`, { headers: this.header })
       .subscribe((data: any) => {
-      this.likes = data;
-    })
+
+        this.likes = data;
+
+        if (this.tweets.length === 0) {
+          this.noDataLikes = true;
+        }
+      })
 
     // seguidores
-    this.http.get(env.api+`users/${this.id}/followers`, { headers: this.header })
-      .subscribe((data:any) => {
-      this.followers = data;
-  })
+    this.http.get(env.api + `users/${this.id}/followers`, { headers: this.header })
+      .subscribe((data: any) => {
+        this.followers = data;
+      })
 
     // seguidos
-    this.http.get(env.api+`users/${this.id}/followings`, { headers: this.header })
-    . subscribe((data:any) => {
-      this.following = data;
-      end();
-    })
+    this.http.get(env.api + `users/${this.id}/followings`, { headers: this.header })
+      .subscribe((data: any) => {
+        this.following = data;
+        end();
+      })
 
     // datos del usuario
-    this.http.get(env.api+`users/${this.id}`, { headers: this.header })
+    this.http.get(env.api + `users/${this.id}`, { headers: this.header })
       .subscribe((data: any) => {
-      this.user = data
+        this.user = data
 
-      // actualizando datos del formulario de editar perfil
-      const { first_name, last_name, biography } = data
-      const { controls } = this.editProfileForm
-      
-      controls['firstName'].setValue(first_name)
-      controls['lastName'].setValue(last_name)
-      controls['bio'].setValue(biography)
+        // actualizando datos del formulario de editar perfil
+        const { first_name, last_name, biography } = data
+        const { controls } = this.editProfileForm
 
-      end()
-    })
+        controls['firstName'].setValue(first_name)
+        controls['lastName'].setValue(last_name)
+        controls['bio'].setValue(biography)
+
+        end()
+      })
   }
 
   // se reinician los datos
-  cleanProfileData(){
+  cleanProfileData() {
     this.following = [];
     this.followers = [];
     this.tweets = [];
@@ -264,11 +287,11 @@ export class ProfilePage implements OnInit {
       last_name: controls['lastName'].value,
       biography: controls['bio'].value
     }
-    
-    if (controls['password'].value != '') 
+
+    if (controls['password'].value != '')
       updatedUser.password = controls['password'].value
 
-    this.http.put(env.api+`users/${this.id}`, updatedUser, { headers: this.header }).subscribe(async (data: any) => {
+    this.http.put(env.api + `users/${this.id}`, updatedUser, { headers: this.header }).subscribe(async (data: any) => {
       const alert = await this.createAlert('Updated profile', 'Your profile has been successfully updated')
       alert.present()
       this.cancelEditProfile()

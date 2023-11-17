@@ -11,7 +11,7 @@
       </ion-button>
     </ion-buttons>
   </ion-col>
-  <ion-col size="10">
+  <ion-col size="10" class="padding-col">
     <ion-row class="tweet-info">
       <ion-col size="12">
         <span class="name">{{ tweet.first_name }} {{ tweet.last_name }}</span>
@@ -106,195 +106,111 @@
           <ion-title>Post</ion-title>
         </ion-toolbar>
       </ion-header>
-      <ion-content class="ion-padding">
-        <!-- TWEET VIEW -->
-        <ion-row class="wrapper">
-          <ion-col size="2">
-            <ion-avatar class="custom-avatar">
-              <ion-img 
-                [src]="'https://firebasestorage.googleapis.com/v0/b/mobile-apps-d0b43.appspot.com/o/twitter-posts%2Fprofile.jpg?alt=media&token=336149f6-3a78-4d60-a2f6-7b26d8a12a55'"
+      <ion-content>
+        <div class="ion-padding">
+          <!-- TWEET VIEW -->
+          <ion-row class="wrapper">
+            <ion-col size="2">
+              <ion-avatar class="custom-avatar">
+                <ion-img 
+                  [src]="'https://firebasestorage.googleapis.com/v0/b/mobile-apps-d0b43.appspot.com/o/twitter-posts%2Fprofile.jpg?alt=media&token=336149f6-3a78-4d60-a2f6-7b26d8a12a55'"
+                >
+                </ion-img>
+              </ion-avatar>
+            </ion-col>
+  
+            <ion-col size="10">
+              <ion-row class="tweet-info">
+                <ion-col size="12">
+                  <ion-row>
+                    <span class="name">{{ tweet.first_name }} {{ tweet.last_name }}</span>
+                  </ion-row>
+                  <ion-row>
+                    <span class="handle">@{{ tweet.alias }}</span>
+                  </ion-row>
+                </ion-col>
+              </ion-row>
+  
+              <ion-row>
+                <ion-col size="12">
+                  <div class="custom-text" [innerHtml]="tweet.post_content"></div>
+                  <img
+                    class="preview-img"
+                    [src]="tweet.image_url"
+                    *ngIf="tweet.image_url"
+                  />
+                </ion-col>
+              </ion-row>
+  
+              <ion-row>
+                <ion-col size="12">
+                  <span class="handle">{{ formatDate(tweet.creation_date) }}</span>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+  
+          <ion-row class="ion-justify-content-start wrapper">
+            <ion-col size="2"></ion-col>
+            <ion-col size="3" class="handle-col">
+              <ion-button
+                (click)="handleLike(tweet)"
+                fill="clear"
+                [color]="tweet.liked ? 'danger' : 'medium'"
+                size="small"
               >
-              </ion-img>
-            </ion-avatar>
-          </ion-col>
-
-          <ion-col size="10">
-            <ion-row class="tweet-info">
-              <ion-col size="12">
-                <ion-row>
-                  <span class="name">{{ tweet.first_name }} {{ tweet.last_name }}</span>
-                </ion-row>
-                <ion-row>
-                  <span class="handle">@{{ tweet.alias }}</span>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-
-            <ion-row>
-              <ion-col size="12">
-                <div class="custom-text" [innerHtml]="tweet.post_content"></div>
-                <img
-                  class="preview-img"
-                  [src]="tweet.image_url"
-                  *ngIf="tweet.image_url"
-                />
-              </ion-col>
-            </ion-row>
-
-            <ion-row>
-              <ion-col size="12">
-                <span class="handle">{{ formatDate(tweet.creation_date) }}</span>
-              </ion-col>
-            </ion-row>
-          </ion-col>
-        </ion-row>
-
-        <ion-row class="ion-justify-content-start wrapper">
-          <ion-col size="2"></ion-col>
-          <ion-col size="3" class="handle-col">
-            <ion-button
-              (click)="handleLike(tweet)"
-              fill="clear"
-              [color]="tweet.liked ? 'danger' : 'medium'"
-              size="small"
-            >
-              <ion-icon
-                [name]="tweet.liked ? 'heart' : 'heart-outline'"
-                slot="start"
-              ></ion-icon>
-              {{ tweet.post_likes }}
-            </ion-button>
-          </ion-col>
-
-          <ion-col size="3" class="handle-col" *ngIf="canBeDeleted">
-            <ion-button
-              fill="clear"
-              color="medium"
-              size="small"
-            >
-              <ion-icon name="trash-outline" slot="start"></ion-icon>
-            </ion-button>
-          </ion-col>
-          <ion-col size="2"></ion-col>
-        </ion-row>
-        <!-- REPLY SECTION -->
-        <div class="form">
-          <ion-card class="handle-card">
-            <ion-card-content>
-              <form [formGroup]="replyForm">
-                <ion-item>
-                  <ion-textarea
-                    ngDefaultControl
-                    formControlName="tweet-reply"
-                    placeholder="Post your reply"
-                    [counter]="true"
-                    maxlength="180"
-                  ></ion-textarea>
-                    <ion-button
-                      class="btn-width" 
-                      shape="round"
-                      [strong]="true"
-                      [disabled]="!replyForm.get('tweet-reply')?.value"
-                      (click)="postReply()"
-                    >
-                      Reply
-                    </ion-button>
-                </ion-item>
-              </form>
-            </ion-card-content>
-          </ion-card>
+                <ion-icon
+                  [name]="tweet.liked ? 'heart' : 'heart-outline'"
+                  slot="start"
+                ></ion-icon>
+                {{ tweet.post_likes }}
+              </ion-button>
+            </ion-col>
+  
+            <ion-col size="3" class="handle-col" *ngIf="canBeDeleted">
+              <ion-button
+                fill="clear"
+                color="medium"
+                size="small"
+              >
+                <ion-icon name="trash-outline" slot="start"></ion-icon>
+              </ion-button>
+            </ion-col>
+            <ion-col size="2"></ion-col>
+          </ion-row>
+          <!-- REPLY SECTION -->
+          <div class="form">
+            <ion-card class="handle-card">
+              <ion-card-content>
+                <form [formGroup]="replyForm">
+                  <ion-item>
+                    <ion-textarea
+                      ngDefaultControl
+                      formControlName="tweet-reply"
+                      placeholder="Post your reply"
+                      [counter]="true"
+                      maxlength="180"
+                    ></ion-textarea>
+                      <ion-button
+                        class="btn-width" 
+                        shape="round"
+                        [strong]="true"
+                        [disabled]="!replyForm.get('tweet-reply')?.value"
+                        (click)="postReply()"
+                      >
+                        Reply
+                      </ion-button>
+                  </ion-item>
+                </form>
+              </ion-card-content>
+            </ion-card>
+          </div>
         </div>
 
         <!--Comentarios--> 
         <div>
           <app-tweet *ngFor="let comment of comments" [tweet]="comment" [isComment]="true"></app-tweet>
         </div>
-        <!--
-        <ion-row class="wrapper-comment">
-          <ion-col size="2">
-            <ion-avatar class="custom-avatar">
-              <ion-img 
-                [src]="'https://firebasestorage.googleapis.com/v0/b/mobile-apps-d0b43.appspot.com/o/twitter-posts%2Fprofile.jpg?alt=media&token=336149f6-3a78-4d60-a2f6-7b26d8a12a55'"
-              >
-              </ion-img>
-            </ion-avatar>
-          </ion-col>
-
-          <ion-col size="10">
-            <ion-row class="tweet-info">
-              <ion-col size="12">
-                <ion-row>
-                  <span class="name">Nombre Apellido</span>
-                </ion-row>
-                <ion-row>
-                  <span class="handle">@gay</span>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-
-            <ion-row> 
-              <ion-col size="12">
-                <div class="custom-text">texto</div>
-              -->
-                <!-- <div class="custom-text" [innerHtml]="tweet.post_content"></div>COLOCAR img y texto
-                <img 
-                  class="preview-img"
-                  [src]="tweet.image_url"
-                  *ngIf="tweet.image_url"
-                /> -->
-              
-              <!--
-              </ion-col>
-            </ion-row>
-
-            <ion-row>
-              <ion-col size="12">
-                <span class="handle">fecha comentario</span>
-              </ion-col>
-            </ion-row>
-          </ion-col>
-        </ion-row>
-
-        <ion-row class="ion-justify-content-start wrapper">
-          <ion-col size="2"></ion-col>
-          <ion-col size="3" class="handle-col">
-            <ion-button
-              fill="clear" 
-              color="medium" 
-              size="small"
-              (click)="openModalEditReply(true)"
-            >
-              <ion-icon name="create-outline" slot="start"></ion-icon>
-            </ion-button>
-          </ion-col>
-        
-          <ion-col size="3" class="handle-col">
-            <ion-button
-              
-              fill="clear"
-              [color]="tweet.liked ? 'danger' : 'medium'"
-              size="small"
-            >
-              <ion-icon
-                [name]="tweet.liked ? 'heart' : 'heart-outline'"
-                slot="start"
-              ></ion-icon>
-              5
-            </ion-button>
-          </ion-col>
-
-          <ion-col size="3" class="handle-col">
-            <ion-button
-              fill="clear"
-              color="medium"
-              size="small"
-            >
-              <ion-icon name="trash-outline" slot="start"></ion-icon>
-            </ion-button>
-          </ion-col>
-          <ion-col size="2"></ion-col>
-        </ion-row>
-        -->
       </ion-content>
   </ion-modal>
 

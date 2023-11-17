@@ -28,6 +28,7 @@
 }
 
 .wrapper {
+     margin-top: 10px;
      border-bottom: 1px solid var(--ion-color-light);
 }
 
@@ -35,6 +36,10 @@
      margin-top: 15px;
      border-top: 1px solid var(--ion-color-light);
      border-bottom: 1px solid var(--ion-color-light);
+}
+
+.padding-col {
+     padding-left: 10px;
 }
 
 .highlight {

@@ -47,6 +47,21 @@ ion-loading.custom-loading {
      color: #428cff;
 }
 
+.no-results-div {
+     display: flex;
+     margin-top: 250px;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+}
+
+.handle-label {
+     margin-top: 10px;
+     font-size: x-large;
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+     font-weight: bolder;
+}
+
 
 /* .profile-label:first-of-type {
      margin-left: 5px;
