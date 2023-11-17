@@ -95,7 +95,7 @@ export class TweetComponent implements OnInit {
     this.isModalOpen = isOpen;
   }
 
-  openModalProfile(isOpen: boolean) {
+  openModalProfile() {
     this.modalController
       .create({
         component: UserProfileComponent,
@@ -106,7 +106,7 @@ export class TweetComponent implements OnInit {
       .then((modal) => {
         modal.onDidDismiss()
           .then(() => {
-            
+
           })
           modal.present()
       })
