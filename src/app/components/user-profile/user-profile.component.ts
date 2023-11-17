@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
   IonModal,
   AlertController,
-  IonLoading,
   ModalController,
 } from '@ionic/angular';
 import { environment as env } from 'src/environments/environment';
@@ -40,10 +39,7 @@ export class UserProfileComponent implements OnInit {
     private modalController: ModalController
   ) {
     this.mainModal = null as any;
-    this.loading = null as any;
   }
-
-  @ViewChild('loading') loading: IonLoading;
 
   async ngOnInit() {
     const token = await Preferences.get({ key: 'token' });
@@ -66,7 +62,6 @@ export class UserProfileComponent implements OnInit {
   }
 
   fetchUserData() {
-    //this.loading.present()
 
     this.http
       .get(env.api + `users/${this.userId}`, { headers: this.header })
@@ -107,7 +102,6 @@ export class UserProfileComponent implements OnInit {
         }
       );
 
-    //this.loading.dismiss(null, 'cancel')
   }
 
   handleRefresh(event: any) {}
