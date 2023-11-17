@@ -241,17 +241,6 @@
           <ion-label class="handle-label">Like some tweets!</ion-label>
         </div>
       </div>
-
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button (click)="openNewTweet()">
-          <ion-fab-content>
-            <ion-icon name="add-outline" size="large"> </ion-icon>
-          </ion-fab-content>
-        </ion-fab-button>
-      </ion-fab>
-
-      <!-- Este componente se mostrará unicamente cuando shoNewTweet cambie a true -->
-      <app-new-tweet *ngIf="showNewTweet"></app-new-tweet>
     </ion-content>
   </div>
 </ion-content>
