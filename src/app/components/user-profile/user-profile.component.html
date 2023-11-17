@@ -1,0 +1,115 @@
+<ion-loading #loading spinner="crescent" class="custom-loading"></ion-loading>
+
+<ion-content>
+  <div class="ion-page" id="main-content">
+      <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
+
+      <ion-modal trigger="{{modalTrigger}}">
+        <div class="ion-padding">
+          <div class="profile-label">
+            <ion-label class="handle-title">{{user.first_name}} {{user.last_name}}</ion-label>
+            <ion-label class="handle">@{{user.alias}}</ion-label>
+          </div>
+          <ion-text class="profile-bio handle">{{ user.biography }}</ion-text>
+        </div>
+        <div>
+          <ion-button id="open-modal-following" fill="clear" color="dark">
+            <ion-label class="padding-numbers">{{user.user_followings}}</ion-label>
+            <ion-label class="handle">Following</ion-label>
+          </ion-button>
+          <ion-button id="open-modal-followers" fill="clear" color="dark">
+            <ion-label class="padding-numbers">{{ user.user_followers }}</ion-label>
+            <ion-label class="handle">Followers</ion-label>
+          </ion-button>
+        </div>
+
+      <ion-segment [(ngModel)]="segment">
+        <ion-segment-button value="posts">
+          <ion-label>Posts</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="replies">
+          <ion-label>Replies</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="likes">
+          <ion-label>Likes</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-modal>
+
+    <ion-content>
+      <ion-modal #followingModal trigger="open-modal-following">
+        <ng-template>
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-icon
+                  name="arrow-back-outline"
+                  (click)="cancelModalFollowing()"
+                  class="handle-back-button"
+                  size="small"
+                ></ion-icon>
+              </ion-buttons>
+              <ion-title>Following</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding">
+            <app-users *ngFor="let user of following" [user]="user"></app-users>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+
+      <ion-modal #followersModal trigger="open-modal-followers">
+        <ng-template>
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-icon
+                  name="arrow-back-outline"
+                  (click)="cancelModalFollowers()"
+                  class="handle-back-button"
+                  size="small"
+                ></ion-icon>
+              </ion-buttons>
+              <ion-title>Followers</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding">
+            <app-users *ngFor="let user of followers" [user]="user"></app-users>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+
+      <div [hidden]="segment != 'posts'">
+        <app-tweet *ngFor="let tweet of tweets" [tweet]="tweet"></app-tweet>
+
+        <div *ngIf="noDataTweets" class="no-results-div">
+          <ion-icon name="skull" color="danger" size="large"></ion-icon>
+          <ion-label class="handle-label">No tweets</ion-label>
+        </div>
+      </div>
+
+      <div [hidden]="segment != 'replies'">
+        <app-tweet *ngFor="let tweet of replies" [tweet]="tweet" [isComment]="true"></app-tweet>
+
+        <div *ngIf="noDataReplies" class="no-results-div">
+          <ion-icon name="skull" color="danger" size="large"></ion-icon>
+          <ion-label class="handle-label">No replies</ion-label>
+        </div>
+      </div>
+
+      <div [hidden]="segment != 'likes'">
+        <app-tweet *ngFor="let tweet of likes" [tweet]="tweet"></app-tweet>
+
+        <div *ngIf="noDataLikes" class="no-results-div">
+          <ion-icon name="skull" color="danger" size="large"></ion-icon>
+          <ion-label class="handle-label">Like some tweets!</ion-label>
+        </div>
+      </div>
+
+      <!-- Este componente se mostrará unicamente cuando shoNewTweet cambie a true -->
+      <app-new-tweet *ngIf="showNewTweet"></app-new-tweet>
+    </ion-content>
+  </div>
+</ion-content>
