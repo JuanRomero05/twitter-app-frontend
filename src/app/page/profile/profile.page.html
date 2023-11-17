@@ -225,7 +225,7 @@
       </div>
 
       <div [hidden]="segment != 'replies'">
-        <app-tweet *ngFor="let tweet of replies" [tweet]="tweet"></app-tweet>
+        <app-tweet *ngFor="let tweet of replies" [tweet]="tweet" [isComment]="true"></app-tweet>
 
         <div *ngIf="noDataReplies" class="no-results-div">
           <ion-icon name="skull" color="danger" size="large"></ion-icon>

@@ -132,7 +132,7 @@ export class ProfilePage implements OnInit {
 
         this.replies = data;
 
-        if (this.tweets.length === 0) {
+        if (this.replies.length === 0) {
           this.noDataReplies = true;
         }
       })
@@ -143,7 +143,7 @@ export class ProfilePage implements OnInit {
 
         this.likes = data;
 
-        if (this.tweets.length === 0) {
+        if (this.likes.length === 0) {
           this.noDataLikes = true;
         }
       })
