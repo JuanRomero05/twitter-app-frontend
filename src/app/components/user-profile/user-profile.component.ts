@@ -18,7 +18,7 @@ export class UserProfileComponent  implements OnInit {
   @ViewChild('followingModal') modalFollowing: IonModal;
   @ViewChild('followersModal') modalFollowers: IonModal;
 
-  segment: String = 'posts';
+  segment: any = 'posts';
   token: string | null = ''
   id: string | null = ''
   header: HttpHeaders = new HttpHeaders()
@@ -42,8 +42,12 @@ export class UserProfileComponent  implements OnInit {
     this.loading = null as any
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
+  handleRefresh(event: any) {
+
+  }
   
   cancelModalFollowing() {
     this.modalFollowing.dismiss(null, 'cancel');
