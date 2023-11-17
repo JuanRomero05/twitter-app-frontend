@@ -1,3 +1,5 @@
+<ion-loading #loading spinner="crescent" class="custom-loading"></ion-loading>
+
 <ion-row class="wrapper" *ngIf="exists">
   <ion-col size="2">
     <ion-buttons>
@@ -164,16 +166,6 @@
                   slot="start"
                 ></ion-icon>
                 {{ tweet.post_likes }}
-              </ion-button>
-            </ion-col>
-  
-            <ion-col size="3" class="handle-col" *ngIf="canBeDeleted">
-              <ion-button
-                fill="clear"
-                color="medium"
-                size="small"
-              >
-                <ion-icon name="trash-outline" slot="start"></ion-icon>
               </ion-button>
             </ion-col>
             <ion-col size="2"></ion-col>

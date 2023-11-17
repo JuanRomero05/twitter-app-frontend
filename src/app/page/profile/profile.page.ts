@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { IonModal, AlertController, IonMenu, IonLoading } from '@ionic/angular';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { environment as env } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
 import { Router } from '@angular/router';

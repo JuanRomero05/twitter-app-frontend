@@ -3,7 +3,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment as env } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
-import { ActionSheetController, AlertController, IonModal } from '@ionic/angular';
+import { ActionSheetController, AlertController, IonLoading, IonModal } from '@ionic/angular';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -39,7 +39,6 @@ export class TweetComponent implements OnInit {
     public fb: FormBuilder,
     private actionSheetController: ActionSheetController,
   ) {
-
     this.replyForm = this.fb.group({
       'tweet-reply': new FormControl,
     })
@@ -52,6 +51,7 @@ export class TweetComponent implements OnInit {
   segment: string = 'postsProfile';
 
   isFollowing: boolean = false;
+
 
   async ngOnInit() {
     this.parseTweet();
@@ -71,13 +71,17 @@ export class TweetComponent implements OnInit {
 
     // si es un tweet, se buscan los comentarios del mismo
     if (!this.isComment)
-      this.http.get(env.api + `tweets/${this.tweet.post_id}/comments`, { headers: this.header })
-        .subscribe((data: any) => {
-          this.comments = data
-        }, async () => {
-          const alert = await this.createAlert('Failure', 'Something went wrong while fetching tweets.')
-          alert.present()
-        })
+      await this.fetchComments()
+  }
+
+  async fetchComments() {
+    this.http.get(env.api + `tweets/${this.tweet.post_id}/comments`, { headers: this.header })
+    .subscribe((data: any) => {
+      this.comments = data
+    }, async () => {
+      const alert = await this.createAlert('Failure', 'Something went wrong while fetching tweets.')
+      alert.present()
+    })
   }
 
   handleFollow() {
@@ -103,6 +107,8 @@ export class TweetComponent implements OnInit {
 
   openModalEditReply(isOpen: boolean) {
     this.isModalEditReplyOpen = isOpen
+    const { controls } = this.replyEditForm
+    controls['edit-reply'].setValue(this.tweet.post_content)
   }
 
   async deleteTweet(tweet: any) {
@@ -145,13 +151,38 @@ export class TweetComponent implements OnInit {
   }
 
   postReply() {
-    console.log('mira tonto estoy publicando un comentario estaticamente jjajajaja');
+    const { controls } = this.replyForm
 
+    const body = {
+      user_id: this.id,
+      tweet_id: this.tweet.post_id,
+      comment_content: controls['tweet-reply'].value
+    }
+
+    this.http.post(env.api+`comments`, body, { headers: this.header })
+      .subscribe(async ()=>{
+        controls['tweet-reply'].setValue('')
+        await this.fetchComments()
+      }, async (err: any) => {
+        const alert = await this.createAlert('Failure', err.error.msg)
+        alert.present()
+      })
   }
 
   editReply() {
-    console.log('el tonto de nuevo ve cm estoy editando un comentario estaticamente jajaja');
+    const { controls } = this.replyEditForm
 
+    const body = {
+      comment_content: controls['edit-reply'].value
+    }
+
+    this.http.put(env.api+`comments/${this.tweet.post_id}`, body, { headers: this.header })
+      .subscribe(async ()=>{
+        this.isModalEditReplyOpen = false
+      }, async (err: any) => {
+        const alert = await this.createAlert('Failure', err.error.msg)
+        alert.present()
+      })
   }
 
   createAlert = async (header: string, message: string) => {
