@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment as env } from 'src/environments/environment';
+import { IonLoading } from '@ionic/angular';
 
 @Component({
   selector: 'app-signup',
@@ -21,7 +22,7 @@ export class SignupPage implements OnInit {
     private router: Router,
     private http: HttpClient
   ) {
-
+    this.loading = null as any;
     this.signupForm = this.fb.group({
       'username': new FormControl("", Validators.required),
       'firstName': new FormControl("", Validators.required),
@@ -39,6 +40,7 @@ export class SignupPage implements OnInit {
   // Referencias a los elementos password y repeatPassword
   @ViewChild('passwordInput') passwordInput: any;
   @ViewChild('repeatPasswordInput') repeatPasswordInput: any;
+  @ViewChild('loading') loading: IonLoading;
 
   // Variables para realizar el seguimiento del estado de visibilidad del password e icon
   showPassword: boolean = false;
@@ -83,6 +85,7 @@ export class SignupPage implements OnInit {
   }
 
   async saveData() {
+    this.loading.present()
     if (this.signupForm.invalid) {
       const alert = await this.createAlert('Empty fields', 'No field can be empty.')
       await alert.present();
@@ -102,6 +105,8 @@ export class SignupPage implements OnInit {
       .subscribe(async () => {
         const alert = await this.createAlert('Success', 'You have been successfully registered.')
     
+        this.loading.dismiss(null, 'cancel');
+
         await alert.present();
     
         alert.onDidDismiss().then(() => {
@@ -112,5 +117,7 @@ export class SignupPage implements OnInit {
       const alert = await this.createAlert('Failure', err.error.msg)
       await alert.present();
     })
+
+    this.loading.dismiss(null, 'cancel');
   }
 }
