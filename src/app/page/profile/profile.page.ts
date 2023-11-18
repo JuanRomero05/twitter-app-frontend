@@ -396,6 +396,13 @@ export class ProfilePage implements OnInit {
       biography: controls['bio'].value
     }
 
+    if (controls['password'].value != controls['repeatPassword'].value){
+      const alert = await this.createAlert('Failure', `Passwords don't match.`)
+      alert.present()
+      return
+    }
+
+    // el valor de la clave solo se tomara en cuenta si no esta vacio. De esta manera, el usuario puede elegir no editarla
     if (controls['password'].value != '')
       updatedUser.password = controls['password'].value
 

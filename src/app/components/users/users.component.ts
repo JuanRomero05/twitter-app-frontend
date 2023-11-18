@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -10,7 +11,7 @@ import { ModalController } from '@ionic/angular';
 })
 export class UsersComponent implements OnInit {
 
-  isFollowing = false;
+  isFollowing: boolean;
 
   id: string | null = ''
 
@@ -21,10 +22,19 @@ export class UsersComponent implements OnInit {
   }
 
   constructor(    
+    private router: Router,
     private modalController: ModalController
-  ) { }
+  ) {
+    this.isFollowing = false
+  }
 
   openModalProfile() {
+    // si se trata del perfil del mismo usuario
+    if (this.user.user_id == this.id){
+      this.router.navigate(['/tab-inicial/profile']);
+      return
+    }
+
     this.modalController
       .create({
         component: UserProfileComponent,
@@ -33,11 +43,7 @@ export class UsersComponent implements OnInit {
         }
       })
       .then((modal) => {
-        modal.onDidDismiss()
-          .then(() => {
-            
-          })
-          modal.present()
+        modal.present()
       })
   }
 
@@ -45,5 +51,4 @@ export class UsersComponent implements OnInit {
     const id = await Preferences.get({ key: 'id' })
     this.id = id.value    
   }
-
 }
