@@ -151,8 +151,8 @@ export class TweetComponent implements OnInit {
     }
 
     const actionSheet = await this.actionSheetController.create({
-      header: 'Close?',
-      subHeader: 'Are you sure you want to delete this tweet?',
+      header: 'Delete post?',
+      subHeader: 'Are you sure you want to delete this post?',
       buttons: [
         {
           text: 'Confirm',

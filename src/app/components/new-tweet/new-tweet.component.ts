@@ -84,8 +84,9 @@ export class NewTweetComponent implements OnInit {
         const alert = await this.createAlert('Failure', err.error.msg)
         alert.present()
       })
-    
-      this.deletePhoto()
+      
+      this.imageData = ''
+      this.imageUrl = ''
   }
 
   async uploadImage() {
@@ -139,6 +140,8 @@ export class NewTweetComponent implements OnInit {
             text: 'Confirm',
             handler: () => {
               this.newTweetForm.controls['newTweet'].setValue('')
+              this.imageData = ''
+              this.imageUrl = ''
               this.modal.dismiss(null, 'cancel')
             }
           },
