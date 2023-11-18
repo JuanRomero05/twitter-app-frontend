@@ -8,21 +8,11 @@
 }
 
 .handle {
-     padding-left: 4px;
      color: var(--ion-color-medium);
 }
 
 .wrapper {
      border-bottom: 1px solid var(--ion-color-light);
-}
-
-.flex {
-     display: flex;
-     justify-content: space-between;
-}
-
-.follow {
-     margin-left: auto;
 }
 
 .custom-avatar {
@@ -35,4 +25,8 @@
      /* Ajusta el valor según el espacio deseado entre líneas */
      line-height: 1.6;
      /* Ajusta el valor según el espacio deseado entre líneas */
+}
+
+.padding-col {
+     padding-left: 15px;
 }

@@ -1,160 +1,152 @@
-    
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-icon
+        name="arrow-back-outline"
+        (click)="exitModal()"
+        class="handle-back-button"
+        size="small"
+      ></ion-icon>
+    </ion-buttons>
+    <ion-title>Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+      
+  <ion-row class="ion-padding">
+    <ion-col size="9">
+      <ion-row class="profile-label">
+        <ion-label class="handle-title">{{ user.first_name }} {{ user.last_name }}</ion-label>
+        <ion-label class="handle-profile">@{{ user.alias }}</ion-label>
+      </ion-row>
+    </ion-col>
+
+    <ion-col size="3">
+      <ion-button 
+        class="btn-width2"
+        shape="round" 
+        fill="outline" 
+        (click)="handleFollow()"
+        [color]="isFollowing ? 'danger' : 'dark'"
+      >
+        {{ isFollowing ? 'Unfollow' : 'Follow' }}
+       </ion-button>
+    </ion-col>
+
+    <ion-col size="12">
+      <ion-row>
+        <ion-label>{{ user.biography }}</ion-label>
+       </ion-row>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col size="12">
+      <ion-row>
+        <ion-button (click)="openModalFollowing(true)" fill="clear" color="dark">
+          <ion-label class="padding-numbers">{{ user.user_followings }}</ion-label>
+          <ion-label class="handle">Following</ion-label>
+        </ion-button>
+        <ion-button (click)="openModalFollowers(true)" fill="clear" color="dark">
+          <ion-label class="padding-numbers">{{ user.user_followers }}</ion-label>
+          <ion-label class="handle">Followers</ion-label>
+        </ion-button>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+  <ion-modal [isOpen]="isModalFollowersOpen">
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-icon
             name="arrow-back-outline"
-            (click)="exitModal()"
+            (click)="openModalFollowers(false)"
             class="handle-back-button"
             size="small"
           ></ion-icon>
         </ion-buttons>
-        <ion-title>Profile</ion-title>
+        <ion-title>Followers</ion-title>
       </ion-toolbar>
     </ion-header>
-
-    <ion-content>
-      <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
-        <ion-refresher-content></ion-refresher-content>
-      </ion-refresher>
-      
-      <ion-row class="ion-padding">
-      
-          <ion-col size="9">
-            <ion-row class="profile-label">
-              <ion-label class="handle-title">{{ user.first_name }} {{ user.last_name }}</ion-label>
-              <ion-label class="handle-profile">@{{ user.alias }}</ion-label>
-            </ion-row>
-          </ion-col>
-          <ion-col size="3">
-            <ion-button 
-            class="btn-width2"
-            shape="round" 
-            fill="outline" 
-            (click)="handleFollow()"
-            [color]="isFollowing ? 'danger' : 'dark'"
+    <ion-content class="ion-padding">
+      <ion-row class="wrapper" *ngFor="let follow of followers">
+        <ion-col size="2">
+          <ion-avatar class="custom-avatar">
+            <ion-img 
+              [src]="'https://firebasestorage.googleapis.com/v0/b/mobile-apps-d0b43.appspot.com/o/twitter-posts%2Fprofile.jpg?alt=media&token=336149f6-3a78-4d60-a2f6-7b26d8a12a55'"
             >
-              {{ isFollowing ? 'Unfollow' : 'Follow' }}
-            </ion-button>
-          </ion-col>
+            </ion-img>
+          </ion-avatar>
+        </ion-col>
 
-          <ion-col size="12">
-            <ion-row>
-              <ion-label>{{ user.biography }}</ion-label>
-            </ion-row>
-          </ion-col>
-        
-        </ion-row>
-
-        <ion-row>
-          <ion-col size="12">
-            <ion-row>
-              <ion-button (click)="openModalFollowing(true)" fill="clear" color="dark">
-                <ion-label class="padding-numbers">{{ user.user_followings }}</ion-label>
-                <ion-label class="handle-btn">Following</ion-label>
-              </ion-button>
-              <ion-button (click)="openModalFollowers(true)" fill="clear" color="dark">
-                <ion-label class="padding-numbers">{{ user.user_followers }}</ion-label>
-                <ion-label class="handle-btn">Followers</ion-label>
-              </ion-button>
-            </ion-row>
-          </ion-col>
-        </ion-row>
-
-      <ion-modal [isOpen]="isModalFollowersOpen">
-          <ion-header>
-            <ion-toolbar>
-              <ion-buttons slot="start">
-                <ion-icon
-                  name="arrow-back-outline"
-                  (click)="openModalFollowers(false)"
-                  class="handle-back-button"
-                  size="small"
-                ></ion-icon>
-              </ion-buttons>
-              <ion-title>Followers</ion-title>
-            </ion-toolbar>
-          </ion-header>
-          <ion-content class="ion-padding">
-            <ion-list>
-              <ion-item *ngFor="let follow of followers">
-                <ion-row class="wrapper">
-                  <ion-col size="2">
-                    <ion-avatar class="custom-avatar">
-                      <ion-img 
-                        [src]="'https://firebasestorage.googleapis.com/v0/b/mobile-apps-d0b43.appspot.com/o/twitter-posts%2Fprofile.jpg?alt=media&token=336149f6-3a78-4d60-a2f6-7b26d8a12a55'"
-                      >
-                      </ion-img>
-                    </ion-avatar>
-                  </ion-col>
-                  <ion-col size="10">
-                    <ion-row class="tweet-info">
-                      <ion-col size="12">
-                        <div class="flex">
-                          <span class="name">{{ follow.first_name }} {{ follow.last_name }}</span>
-                        </div>
-                        <ion-row>
-                          <span class="handle">@{{ follow.alias }}</span>
-                        </ion-row>
-                      </ion-col>
-                
-                      <ion-col size="12">
-                        <span class="custom-text">{{ follow.biography }}</span>
-                      </ion-col>
-                    </ion-row>
-                  </ion-col>
-                </ion-row>
-              </ion-item>              
-            </ion-list>
-          </ion-content>
-      </ion-modal>
-
-      <ion-modal [isOpen]="isModalFollowingOpen">
-        <ion-header>
-          <ion-toolbar>
-            <ion-buttons slot="start">
-              <ion-icon
-                name="arrow-back-outline"
-                (click)="openModalFollowing(false)"
-                class="handle-back-button"
-                size="small"
-              ></ion-icon>
-            </ion-buttons>
-            <ion-title>Following</ion-title>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding">
-          <ion-list>
-            <ion-item *ngFor="let follow of following">
-              <ion-row class="wrapper">
-                <ion-col size="2">
-                  <ion-avatar class="custom-avatar">
-                    <ion-img 
-                      [src]="'https://firebasestorage.googleapis.com/v0/b/mobile-apps-d0b43.appspot.com/o/twitter-posts%2Fprofile.jpg?alt=media&token=336149f6-3a78-4d60-a2f6-7b26d8a12a55'"
-                    >
-                    </ion-img>
-                  </ion-avatar>
-                </ion-col>
-                <ion-col size="10">
-                  <ion-row class="tweet-info">
-                    <ion-col size="12">
-                      <div class="flex">
-                        <span class="name">{{ follow.first_name }} {{ follow.last_name }}</span>
-                      </div>
-                      <ion-row>
-                        <span class="handle">@{{ follow.alias }}</span>
-                      </ion-row>
-                    </ion-col>
-              
-                    <ion-col size="12">
-                      <span class="custom-text">{{ follow.biography }}</span>
-                    </ion-col>
-                  </ion-row>
-                </ion-col>
+        <ion-col size="10">
+          <ion-row class="tweet-info">
+            <ion-col size="12">
+              <ion-row>
+                <span class="name">{{ follow.first_name }} {{ follow.last_name }}</span>
               </ion-row>
-            </ion-item>              
-          </ion-list>
-        </ion-content>
-    </ion-modal>
-
+              <ion-row>
+                <span class="handle">@{{ follow.alias }}</span>
+              </ion-row>
+            </ion-col>
+                
+            <ion-col size="12">
+              <span class="custom-text">{{ follow.biography }}</span>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
     </ion-content>
+  </ion-modal>
+
+  <ion-modal [isOpen]="isModalFollowingOpen">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-icon
+            name="arrow-back-outline"
+            (click)="openModalFollowing(false)"
+            class="handle-back-button"
+            size="small"
+          ></ion-icon>
+        </ion-buttons>
+        <ion-title>Following</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-row class="wrapper" *ngFor="let follow of following">
+        <ion-col size="2">
+          <ion-avatar class="custom-avatar">
+            <ion-img 
+              [src]="'https://firebasestorage.googleapis.com/v0/b/mobile-apps-d0b43.appspot.com/o/twitter-posts%2Fprofile.jpg?alt=media&token=336149f6-3a78-4d60-a2f6-7b26d8a12a55'"
+            >
+            </ion-img>
+          </ion-avatar>
+        </ion-col>
+
+        <ion-col size="10">
+          <ion-row class="tweet-info">
+            <ion-col size="12">
+              <ion-row>
+                <span class="name">{{ follow.first_name }} {{ follow.last_name }}</span>
+              </ion-row>
+              <ion-row>
+                <span class="handle">@{{ follow.alias }}</span>
+              </ion-row>
+            </ion-col>
+              
+            <ion-col size="12">
+              <span class="custom-text">{{ follow.biography }}</span>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-content>
+  </ion-modal>
+
+</ion-content>

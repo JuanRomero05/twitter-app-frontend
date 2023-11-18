@@ -11,12 +11,12 @@
       </ion-button>
     </ion-buttons>
   </ion-col>
-  <ion-col size="10">
+  <ion-col size="10" class="padding-col">
     <ion-row class="tweet-info">
       <ion-col size="12">
-        <div class="flex">
+        <ion-row>
           <span class="name">{{ user.first_name }} {{ user.last_name }}</span>
-        </div>
+        </ion-row>
         <ion-row>
           <span class="handle">@{{ user.alias }}</span>
         </ion-row>
@@ -28,3 +28,4 @@
     </ion-row>
   </ion-col>
 </ion-row>
+
