@@ -407,6 +407,8 @@ export class ProfilePage implements OnInit {
       updatedUser.password = controls['password'].value
 
     this.http.put(env.api + `users/${this.id}`, updatedUser, { headers: this.header }).subscribe(async (data: any) => {
+      controls['password'].setValue('')
+      controls['repeatPassword'].setValue('')
       const alert = await this.createAlert('Updated profile', 'Your profile has been successfully updated')
       alert.present()
       this.cancelEditProfile()
