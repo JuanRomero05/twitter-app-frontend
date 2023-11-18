@@ -113,6 +113,10 @@ export class ProfilePage implements OnInit {
     })
   }
 
+  handleScroll(event: any) {
+    
+  }
+
   // end es el codigo que se ejecuta una vez se hayan obtenido todos los datos del perfil
   fetchProfileData(end: Function) {
     // tweets del usuario
