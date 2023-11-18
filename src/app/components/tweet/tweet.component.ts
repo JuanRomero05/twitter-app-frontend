@@ -74,16 +74,24 @@ export class TweetComponent implements OnInit {
 
     // si es un tweet, se buscan los comentarios del mismo
     if (!this.isComment)
-      await this.fetchComments()
+      this.fetchComments(()=>{})
   }
 
-  async fetchComments() {
+  fetchComments(end: Function) {
     this.http.get(env.api + `tweets/${this.tweet.post_id}/comments`, { headers: this.header })
     .subscribe((data: any) => {
       this.comments = data
+      end()
     }, async () => {
+      end()
       const alert = await this.createAlert('Failure', 'Something went wrong while fetching tweets.')
       alert.present()
+    })
+  }
+
+  handleRefresh(event: any) {
+    this.fetchComments(()=>{
+      event.target.complete()
     })
   }
 
@@ -177,7 +185,7 @@ export class TweetComponent implements OnInit {
     this.http.post(env.api+`comments`, body, { headers: this.header })
       .subscribe(async ()=>{
         controls['tweet-reply'].setValue('')
-        await this.fetchComments()
+        this.fetchComments(()=>{})
       }, async (err: any) => {
         const alert = await this.createAlert('Failure', err.error.msg)
         alert.present()
