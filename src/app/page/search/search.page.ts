@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { GetResult, Preferences } from '@capacitor/preferences';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Preferences } from '@capacitor/preferences';
 import { environment as env } from 'src/environments/environment';
+import { AlertController, IonLoading } from '@ionic/angular';
 
 @Component({
   selector: 'app-search',
@@ -10,7 +11,16 @@ import { environment as env } from 'src/environments/environment';
 })
 export class SearchPage implements OnInit {
     
-  constructor(private http: HttpClient) {}
+  constructor(
+    public alertController: AlertController,
+    private http: HttpClient
+  ) {
+    this.loading = null as any;
+    this.offsetT = 0
+    this.offsetU = 0
+    this.limit = 10
+    this.order = 'new'
+  }
 
   // por defecto, el buscador se situa en usuarios
   segment: String = 'users';
@@ -21,40 +31,90 @@ export class SearchPage implements OnInit {
 
   header: HttpHeaders = new HttpHeaders()
 
+  offsetT: number
+
+  offsetU: number
+  
+  limit: number
+
+  order: string
+
   users: any[] = [];
 
   tweets: any[] = [];
 
-  async findTweets(order: string) {
-     // agregar loading
-    this.tweets = [] // se reinicia la busqueda
-
-    this.http.get(
-      env.api+`tweets?content=${this.query}&order=${order}`, 
-      { headers: this.header })
-      .subscribe((data: any) => {
-        this.tweets = data
-      })
-  }
-
+  @ViewChild('loading') loading: IonLoading;
 
   async handleInput(event: any) {
-    // agregar loading
+    this.offsetT = 0 // se reinicia la paginacion
+    this.offsetU = 0
+
+    this.clearResults()
+
     this.query = event.target.value.toLowerCase();
 
     if (this.query === '')
       return 
-    
+
     // se hace la busqueda de tweets y usuarios por simultaneo
-    this.http.get(env.api+`users?search=${this.query}`, { headers: this.header })
-      .subscribe((data: any) => {
-        this.users = data
-      })
+    this.findUsers(()=>{
+      this.offsetU += this.limit
+    })
 
     // los tweets se ordenan en reciente por defecto
-    await this.findTweets('new')
+    this.findTweets(()=>{
+      this.offsetT += this.limit
+    })
   }
 
+  handleScroll(event: any) {
+    if (this.segment === 'users') {
+      this.findUsers(()=>{
+        this.offsetU += this.limit
+        event?.target.complete()
+      })
+    } 
+
+    if (this.segment === 'tweets') {
+      this.findTweets(()=>{
+        this.offsetT += this.limit
+        event?.target.complete()
+      })
+    }
+  }
+  
+
+  findUsers(success: Function){
+    this.loading.present()
+    
+    this.http.get(env.api+`users?search=${this.query}&offset=${this.offsetU}&limit=${this.limit}`, { headers: this.header })
+      .subscribe((data: any) => {
+        this.users = [...this.users, ...data]
+        this.loading.dismiss(null, 'cancel')
+        success()
+      }, async (err: any) => {
+        this.loading.dismiss(null, 'cancel')
+        const alert = await this.createAlert('Failure', err.error.msg)
+        alert.present()
+      })
+  }
+
+  findTweets(success: Function) {
+    this.loading.present()
+
+    this.http.get(
+      env.api+`tweets?content=${this.query}&order=${this.order}&offset=${this.offsetT}&limit=${this.limit}`, 
+      { headers: this.header })
+      .subscribe((data: any) => {
+        this.tweets = [...this.tweets, ...data]
+        this.loading.dismiss(null, 'cancel')
+        success()
+      }, async (err: any) => {
+        this.loading.dismiss(null, 'cancel')
+        const alert = await this.createAlert('Failure', err.error.msg)
+        alert.present()
+      })
+  }
   
   clearResults() {
     this.users = []
@@ -68,15 +128,40 @@ export class SearchPage implements OnInit {
     this.header = new HttpHeaders().append('Authorization', `Bearer ${this.token}`)
   }
 
-  async mostRecents() {
-    await this.findTweets('new')
+  createAlert = async (header: string, message: string) => {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ['Ok']
+    });
+
+    return alert
   }
 
-  async lessRecents() {
-    await this.findTweets('old')
+  mostRecents() {
+    this.offsetT = 0 // se reinicia la paginacion
+    this.tweets = []
+    this.order = 'new'
+    this.findTweets(()=>{
+      this.offsetT += this.limit
+    })
   }
 
-  async topLiked() {
-    await this.findTweets('popular')
+  lessRecents() {
+    this.offsetT = 0 // se reinicia la paginacion
+    this.tweets = []
+    this.order = 'old'
+    this.findTweets(()=>{
+      this.offsetT += this.limit
+    })
+  }
+
+  topLiked() {
+    this.offsetT = 0 // se reinicia la paginacion
+    this.tweets = []
+    this.order = 'popular'
+    this.findTweets(()=>{
+      this.offsetT += this.limit
+    })
   }
 }

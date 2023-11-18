@@ -54,14 +54,14 @@ export class UserProfileComponent implements OnInit {
   }
 
   async ionViewWillEnter(){
-    this.fetchUserData();
+    this.fetchUserData(()=>{});
   }
 
   exitModal() {
     this.modalController.dismiss(null, 'cancel');
   }
 
-  fetchUserData() {
+  fetchUserData(end: Function) {
 
     this.http
       .get(env.api + `users/${this.userId}`, { headers: this.header })
@@ -69,8 +69,10 @@ export class UserProfileComponent implements OnInit {
         (data: any) => {
           this.user = data;
           this.isFollowing = data.following;
+          end()
         },
         async (err: any) => {
+          end()
           const alert = await this.createAlert('Failure', err.error.msg);
           alert.present();
         }
@@ -104,7 +106,11 @@ export class UserProfileComponent implements OnInit {
 
   }
 
-  handleRefresh(event: any) {}
+  handleRefresh(event: any) {
+    this.fetchUserData(()=>{
+      event.target.complete()
+    })
+  }
 
   handleFollow() {
     const body = {
