@@ -128,7 +128,7 @@ export class ProfilePage implements OnInit {
   }
 
   handleScroll(event: any) {
-    if (this.segment === 'tweets') {
+    if (this.segment === 'posts') {
       this.fetchTweets(()=>{
         this.offsetTweet += this.limit
         event?.target.complete()
@@ -151,11 +151,17 @@ export class ProfilePage implements OnInit {
   }
 
   handleFollowingScroll(event:any) {
-
+    this.fetchFollowing(()=>{
+      this.offsetFollowing += this.limit
+      event?.target.complete()
+    })
   }
 
   handleFollowerScroll(event: any){
-
+    this.fetchFollowers(()=>{
+      this.offsetFollower += this.limit
+      event?.target.complete()
+    })
   }
 
   fetchAllData(end: Function){
@@ -181,7 +187,6 @@ export class ProfilePage implements OnInit {
   fetchTweets(success: Function){
     this.http.get(env.api + `users/${this.id}/tweets?offset=${this.offsetTweet}&limit=${this.limit}`, { headers: this.header })
     .subscribe((data: any) => {
-
       this.tweets = [...this.tweets, ...data];
 
       if (this.tweets.length === 0) {
@@ -199,7 +204,6 @@ export class ProfilePage implements OnInit {
   fetchReplies(success: Function){
     this.http.get(env.api + `users/${this.id}/comments?offset=${this.offsetReply}&limit=${this.limit}`, { headers: this.header })
       .subscribe((data: any) => {
-
         this.replies = [...this.replies, ...data];
 
         if (this.replies.length === 0) {
@@ -217,7 +221,6 @@ export class ProfilePage implements OnInit {
   fetchLiked(success: Function){
     this.http.get(env.api + `users/${this.id}/tweets/liked?offset=${this.offsetLiked}&limit=${this.limit}`, { headers: this.header })
     .subscribe((data: any) => {
-
       this.likes = [...this.likes, ...data];
 
       if (this.likes.length === 0) {
@@ -233,7 +236,7 @@ export class ProfilePage implements OnInit {
   }
 
   fetchFollowers(success: Function){
-    this.http.get(env.api + `users/${this.id}/followers`, { headers: this.header })
+    this.http.get(env.api + `users/${this.id}/followers?offset=${this.offsetLiked}&limit=${this.limit}`, { headers: this.header })
       .subscribe((data: any) => {
         this.followers = [...this.followers, ...data];
         success()
@@ -245,7 +248,7 @@ export class ProfilePage implements OnInit {
   }
 
   fetchFollowing(success: Function){
-    this.http.get(env.api + `users/${this.id}/followings`, { headers: this.header })
+    this.http.get(env.api + `users/${this.id}/followings?offset=${this.offsetLiked}&limit=${this.limit}`, { headers: this.header })
       .subscribe((data: any) => {
         this.following = [...this.following, ...data];
         success()
