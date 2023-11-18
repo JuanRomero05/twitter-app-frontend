@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { GetResult, Preferences } from '@capacitor/preferences';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Preferences } from '@capacitor/preferences';
 import { environment as env } from 'src/environments/environment';
+import { AlertController, IonLoading } from '@ionic/angular';
 
 @Component({
   selector: 'app-search',
@@ -10,7 +11,12 @@ import { environment as env } from 'src/environments/environment';
 })
 export class SearchPage implements OnInit {
     
-  constructor(private http: HttpClient) {}
+  constructor(
+    public alertController: AlertController,
+    private http: HttpClient
+  ) {
+    this.loading = null as any;
+  }
 
   // por defecto, el buscador se situa en usuarios
   segment: String = 'users';
@@ -25,8 +31,11 @@ export class SearchPage implements OnInit {
 
   tweets: any[] = [];
 
-  async findTweets(order: string) {
-     // agregar loading
+  @ViewChild('loading') loading: IonLoading;
+
+  findTweets(order: string) {
+    this.loading.present()
+
     this.tweets = [] // se reinicia la busqueda
 
     this.http.get(
@@ -34,6 +43,11 @@ export class SearchPage implements OnInit {
       { headers: this.header })
       .subscribe((data: any) => {
         this.tweets = data
+        this.loading.dismiss(null, 'cancel')
+      }, async (err: any) => {
+        this.loading.dismiss(null, 'cancel')
+        const alert = await this.createAlert('Failure', err.error.msg)
+        alert.present()
       })
   }
 
@@ -52,7 +66,7 @@ export class SearchPage implements OnInit {
       })
 
     // los tweets se ordenan en reciente por defecto
-    await this.findTweets('new')
+    this.findTweets('new')
   }
 
   
@@ -68,15 +82,25 @@ export class SearchPage implements OnInit {
     this.header = new HttpHeaders().append('Authorization', `Bearer ${this.token}`)
   }
 
+  createAlert = async (header: string, message: string) => {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ['Ok']
+    });
+
+    return alert
+  }
+
   async mostRecents() {
-    await this.findTweets('new')
+    this.findTweets('new')
   }
 
   async lessRecents() {
-    await this.findTweets('old')
+    this.findTweets('old')
   }
 
   async topLiked() {
-    await this.findTweets('popular')
+    this.findTweets('popular')
   }
 }
