@@ -20,6 +20,8 @@ export class SearchPage implements OnInit {
     this.offsetUser = 0
     this.limit = 10
     this.order = 'new'
+    this.noUsers = false
+    this.noTweets = false
   }
 
   // por defecto, el buscador se situa en usuarios
@@ -42,6 +44,10 @@ export class SearchPage implements OnInit {
   users: any[] = [];
 
   tweets: any[] = [];
+
+  noUsers: boolean
+
+  noTweets: boolean
 
   @ViewChild('loading') loading: IonLoading;
 
@@ -90,6 +96,10 @@ export class SearchPage implements OnInit {
     this.http.get(env.api+`users?search=${this.query}&offset=${this.offsetUser}&limit=${this.limit}`, { headers: this.header })
       .subscribe((data: any) => {
         this.users = [...this.users, ...data]
+
+        if (this.users.length === 0)
+          this.noUsers = true
+
         this.loading.dismiss(null, 'cancel')
         success()
       }, async (err: any) => {
@@ -107,6 +117,10 @@ export class SearchPage implements OnInit {
       { headers: this.header })
       .subscribe((data: any) => {
         this.tweets = [...this.tweets, ...data]
+
+        if (this.tweets.length === 0)
+          this.noTweets = true
+
         this.loading.dismiss(null, 'cancel')
         success()
       }, async (err: any) => {
@@ -117,6 +131,8 @@ export class SearchPage implements OnInit {
   }
   
   clearResults() {
+    this.noTweets = false
+    this.noUsers = false
     this.users = []
     this.tweets = []
   }

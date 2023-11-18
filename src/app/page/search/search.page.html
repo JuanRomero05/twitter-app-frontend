@@ -23,7 +23,7 @@
 
 <ion-content class="ion-padding">
   <div [hidden]="segment != 'users'">
-    <div *ngIf="users.length === 0" class="no-results-div">
+    <div *ngIf="noUsers" class="no-results-div">
       <ion-icon name="skull" color="danger" size="large"></ion-icon>
       <ion-label class="handle-label">No results</ion-label>
     </div>
@@ -74,7 +74,7 @@
         </ion-button>
       </ion-col>
     </ion-row>
-    <div *ngIf="tweets.length === 0" class="no-results-div">
+    <div *ngIf="noTweets" class="no-results-div">
       <ion-icon name="skull" color="danger" size="large"></ion-icon>
       <ion-label class="handle-label">No results</ion-label>
     </div>
