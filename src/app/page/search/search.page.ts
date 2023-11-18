@@ -16,6 +16,10 @@ export class SearchPage implements OnInit {
     private http: HttpClient
   ) {
     this.loading = null as any;
+    this.offsetT = 0
+    this.offsetU = 0
+    this.limit = 10
+    this.order = 'new'
   }
 
   // por defecto, el buscador se situa en usuarios
@@ -27,23 +31,67 @@ export class SearchPage implements OnInit {
 
   header: HttpHeaders = new HttpHeaders()
 
+  offsetT: number
+
+  offsetU: number
+  
+  limit: number
+
+  order: string
+
   users: any[] = [];
 
   tweets: any[] = [];
 
   @ViewChild('loading') loading: IonLoading;
 
-  findTweets(order: string) {
+  async handleInput(event: any) {
+    this.offsetT = 0 // se reinicia la paginacion
+    this.offsetU = 0
+
+    this.clearResults()
+
+    this.query = event.target.value.toLowerCase();
+
+    if (this.query === '')
+      return 
+
+    // se hace la busqueda de tweets y usuarios por simultaneo
+    this.findUsers(()=>{
+      this.offsetU += this.limit
+    })
+
+    // los tweets se ordenan en reciente por defecto
+    this.findTweets(()=>{
+      this.offsetT += this.limit
+    })
+  }
+
+  handleScroll(event: any) {
+    if (this.segment === 'users') {
+      this.findUsers(()=>{
+        this.offsetU += this.limit
+        event?.target.complete()
+      })
+    } 
+
+    if (this.segment === 'tweets') {
+      this.findTweets(()=>{
+        this.offsetT += this.limit
+        event?.target.complete()
+      })
+    }
+  }
+  
+
+  findUsers(success: Function){
     this.loading.present()
-
-    this.tweets = [] // se reinicia la busqueda
-
-    this.http.get(
-      env.api+`tweets?content=${this.query}&order=${order}`, 
-      { headers: this.header })
+    
+    this.http.get(env.api+`users?search=${this.query}&offset=${this.offsetU}&limit=${this.limit}`, { headers: this.header })
       .subscribe((data: any) => {
-        this.tweets = data
+        this.users = [...this.users, ...data]
         this.loading.dismiss(null, 'cancel')
+        success()
       }, async (err: any) => {
         this.loading.dismiss(null, 'cancel')
         const alert = await this.createAlert('Failure', err.error.msg)
@@ -51,24 +99,22 @@ export class SearchPage implements OnInit {
       })
   }
 
+  findTweets(success: Function) {
+    this.loading.present()
 
-  async handleInput(event: any) {
-    // agregar loading
-    this.query = event.target.value.toLowerCase();
-
-    if (this.query === '')
-      return 
-    
-    // se hace la busqueda de tweets y usuarios por simultaneo
-    this.http.get(env.api+`users?search=${this.query}`, { headers: this.header })
+    this.http.get(
+      env.api+`tweets?content=${this.query}&order=${this.order}&offset=${this.offsetT}&limit=${this.limit}`, 
+      { headers: this.header })
       .subscribe((data: any) => {
-        this.users = data
+        this.tweets = [...this.tweets, ...data]
+        this.loading.dismiss(null, 'cancel')
+        success()
+      }, async (err: any) => {
+        this.loading.dismiss(null, 'cancel')
+        const alert = await this.createAlert('Failure', err.error.msg)
+        alert.present()
       })
-
-    // los tweets se ordenan en reciente por defecto
-    this.findTweets('new')
   }
-
   
   clearResults() {
     this.users = []
@@ -92,15 +138,30 @@ export class SearchPage implements OnInit {
     return alert
   }
 
-  async mostRecents() {
-    this.findTweets('new')
+  mostRecents() {
+    this.offsetT = 0 // se reinicia la paginacion
+    this.tweets = []
+    this.order = 'new'
+    this.findTweets(()=>{
+      this.offsetT += this.limit
+    })
   }
 
-  async lessRecents() {
-    this.findTweets('old')
+  lessRecents() {
+    this.offsetT = 0 // se reinicia la paginacion
+    this.tweets = []
+    this.order = 'old'
+    this.findTweets(()=>{
+      this.offsetT += this.limit
+    })
   }
 
-  async topLiked() {
-    this.findTweets('popular')
+  topLiked() {
+    this.offsetT = 0 // se reinicia la paginacion
+    this.tweets = []
+    this.order = 'popular'
+    this.findTweets(()=>{
+      this.offsetT += this.limit
+    })
   }
 }

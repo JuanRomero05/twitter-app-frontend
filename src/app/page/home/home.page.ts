@@ -44,7 +44,7 @@ export class HomePage implements OnInit {
     this.header = new HttpHeaders().append('Authorization', `Bearer ${token.value}`)
 
     this.fetchTweets(() => {
-      this.offset = this.offset + this.limit
+      this.offset += this.limit
       this.loading.dismiss(null, 'cancel')
     })
   }
@@ -64,8 +64,7 @@ export class HomePage implements OnInit {
 
   handleScroll(event: any) {
     this.fetchTweets(() => {
-      this.offset = this.offset + this.limit
-      //console.log(this.offset)
+      this.offset += this.limit
       event?.target.complete()
     })
   }
