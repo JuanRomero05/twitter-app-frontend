@@ -84,6 +84,8 @@ export class NewTweetComponent implements OnInit {
         const alert = await this.createAlert('Failure', err.error.msg)
         alert.present()
       })
+    
+      this.deletePhoto()
   }
 
   async uploadImage() {
