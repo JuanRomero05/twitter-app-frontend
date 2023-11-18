@@ -4,7 +4,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Preferences } from '@capacitor/preferences';
 import { ActionSheetController, AlertController, IonModal } from '@ionic/angular';
 import { environment as env } from 'src/environments/environment';
-
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Filesystem, Directory } from '@capacitor/filesystem';
 
 @Component({
   selector: 'app-new-tweet',
@@ -35,7 +36,7 @@ export class NewTweetComponent implements OnInit {
 
   @ViewChild(IonModal) modal: IonModal;
 
-  async ngOnInit() { 
+  async ngOnInit() {
     const token = await Preferences.get({ key: "token" })
     const id = await Preferences.get({ key: "id" })
 
@@ -54,7 +55,7 @@ export class NewTweetComponent implements OnInit {
     return alert
   }
 
-  createTweet(){
+  createTweet() {
     const input = this.newTweetForm.controls['newTweet'].value
 
     const body = {
@@ -62,7 +63,7 @@ export class NewTweetComponent implements OnInit {
       user_id: this.id
     }
 
-    this.http.post(env.api+'tweets', body, { headers: this.header })
+    this.http.post(env.api + 'tweets', body, { headers: this.header })
       .subscribe(async () => {
         const alert = await this.createAlert('Post created', 'Your tweet has been published.')
         alert.present()
@@ -75,8 +76,27 @@ export class NewTweetComponent implements OnInit {
       })
   }
 
-  gallery(){
-    console.log('a')
+  async gallery() {
+    Camera.requestPermissions();
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Photos
+    });
+
+    //Validando que la imagen exista
+    if (image) {
+      this.savePhoto(image.base64String!)
+    }
+  }
+
+  async savePhoto(photo: string) {
+    await Filesystem.writeFile({
+      path: 'test.jpg',
+      data: photo,
+      directory: Directory.Documents,
+    });
   }
 
   async setOpen(value: boolean) {
@@ -99,6 +119,6 @@ export class NewTweetComponent implements OnInit {
         ]
       });
       await actionSheet.present();
-    } 
+    }
   }
 }
