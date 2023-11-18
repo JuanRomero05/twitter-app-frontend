@@ -16,10 +16,12 @@ export class SearchPage implements OnInit {
     private http: HttpClient
   ) {
     this.loading = null as any;
-    this.offsetT = 0
-    this.offsetU = 0
+    this.offsetTweet = 0
+    this.offsetUser = 0
     this.limit = 10
     this.order = 'new'
+    this.noUsers = false
+    this.noTweets = false
   }
 
   // por defecto, el buscador se situa en usuarios
@@ -31,9 +33,9 @@ export class SearchPage implements OnInit {
 
   header: HttpHeaders = new HttpHeaders()
 
-  offsetT: number
+  offsetTweet: number
 
-  offsetU: number
+  offsetUser: number
   
   limit: number
 
@@ -43,11 +45,15 @@ export class SearchPage implements OnInit {
 
   tweets: any[] = [];
 
+  noUsers: boolean
+
+  noTweets: boolean
+
   @ViewChild('loading') loading: IonLoading;
 
   async handleInput(event: any) {
-    this.offsetT = 0 // se reinicia la paginacion
-    this.offsetU = 0
+    this.offsetTweet = 0 // se reinicia la paginacion
+    this.offsetUser = 0
 
     this.clearResults()
 
@@ -57,39 +63,43 @@ export class SearchPage implements OnInit {
       return 
 
     // se hace la busqueda de tweets y usuarios por simultaneo
-    this.findUsers(()=>{
-      this.offsetU += this.limit
+    this.fetchUsers(()=>{
+      this.offsetUser += this.limit
     })
 
     // los tweets se ordenan en reciente por defecto
-    this.findTweets(()=>{
-      this.offsetT += this.limit
+    this.fetchTweets(()=>{
+      this.offsetTweet += this.limit
     })
   }
 
   handleScroll(event: any) {
     if (this.segment === 'users') {
-      this.findUsers(()=>{
-        this.offsetU += this.limit
+      this.fetchUsers(()=>{
+        this.offsetUser += this.limit
         event?.target.complete()
       })
     } 
 
     if (this.segment === 'tweets') {
-      this.findTweets(()=>{
-        this.offsetT += this.limit
+      this.fetchTweets(()=>{
+        this.offsetTweet += this.limit
         event?.target.complete()
       })
     }
   }
   
 
-  findUsers(success: Function){
+  fetchUsers(success: Function){
     this.loading.present()
     
-    this.http.get(env.api+`users?search=${this.query}&offset=${this.offsetU}&limit=${this.limit}`, { headers: this.header })
+    this.http.get(env.api+`users?search=${this.query}&offset=${this.offsetUser}&limit=${this.limit}`, { headers: this.header })
       .subscribe((data: any) => {
         this.users = [...this.users, ...data]
+
+        if (this.users.length === 0)
+          this.noUsers = true
+
         this.loading.dismiss(null, 'cancel')
         success()
       }, async (err: any) => {
@@ -99,14 +109,18 @@ export class SearchPage implements OnInit {
       })
   }
 
-  findTweets(success: Function) {
+  fetchTweets(success: Function) {
     this.loading.present()
 
     this.http.get(
-      env.api+`tweets?content=${this.query}&order=${this.order}&offset=${this.offsetT}&limit=${this.limit}`, 
+      env.api+`tweets?content=${this.query}&order=${this.order}&offset=${this.offsetTweet}&limit=${this.limit}`, 
       { headers: this.header })
       .subscribe((data: any) => {
         this.tweets = [...this.tweets, ...data]
+
+        if (this.tweets.length === 0)
+          this.noTweets = true
+
         this.loading.dismiss(null, 'cancel')
         success()
       }, async (err: any) => {
@@ -117,6 +131,8 @@ export class SearchPage implements OnInit {
   }
   
   clearResults() {
+    this.noTweets = false
+    this.noUsers = false
     this.users = []
     this.tweets = []
   }
@@ -139,29 +155,29 @@ export class SearchPage implements OnInit {
   }
 
   mostRecents() {
-    this.offsetT = 0 // se reinicia la paginacion
+    this.offsetTweet = 0 // se reinicia la paginacion
     this.tweets = []
     this.order = 'new'
-    this.findTweets(()=>{
-      this.offsetT += this.limit
+    this.fetchTweets(()=>{
+      this.offsetTweet += this.limit
     })
   }
 
   lessRecents() {
-    this.offsetT = 0 // se reinicia la paginacion
+    this.offsetTweet = 0 // se reinicia la paginacion
     this.tweets = []
     this.order = 'old'
-    this.findTweets(()=>{
-      this.offsetT += this.limit
+    this.fetchTweets(()=>{
+      this.offsetTweet += this.limit
     })
   }
 
   topLiked() {
-    this.offsetT = 0 // se reinicia la paginacion
+    this.offsetTweet = 0 // se reinicia la paginacion
     this.tweets = []
     this.order = 'popular'
-    this.findTweets(()=>{
-      this.offsetT += this.limit
+    this.fetchTweets(()=>{
+      this.offsetTweet += this.limit
     })
   }
 }

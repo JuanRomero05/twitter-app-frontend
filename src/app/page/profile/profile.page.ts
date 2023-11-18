@@ -27,6 +27,12 @@ export class ProfilePage implements OnInit {
     this.modalEditProfile = null as any
     this.menu = null as any
     this.loading = null as any
+    this.offsetTweet = 0
+    this.offsetReply = 0
+    this.offsetLiked = 0
+    this.offsetFollower = 0
+    this.offsetFollowing = 0
+    this.limit = 10
 
     this.editProfileForm = this.fb.group({
       'firstName': new FormControl,
@@ -69,15 +75,23 @@ export class ProfilePage implements OnInit {
 
   header: HttpHeaders = new HttpHeaders()
 
-  following = [];
+  following: any[] = [];
 
-  followers = [];
+  followers: any[] = [];
 
-  tweets = [];
+  tweets: any[] = [];
 
-  replies = [];
+  replies: any[] = [];
 
-  likes = [];
+  likes: any[] = [];
+
+  offsetTweet: number
+  offsetReply: number
+  offsetLiked: number
+  offsetFollower: number
+  offsetFollowing: number
+
+  limit: number
 
   showNewTweet = false;
 
@@ -89,16 +103,15 @@ export class ProfilePage implements OnInit {
   }
 
   handleRefresh(event: any) {
-    this.fetchProfileData(() => {
+    this.restart()
+    this.fetchAllData(() => {
       event.target.complete()
     })
   }
 
   // cada vez que se ingresa al perfil, se recargan los datos
   async ionViewWillEnter() {
-    this.noDataTweets = false;
-    this.noDataReplies = false;
-    this.noDataLikes = false;
+    this.restart()
 
     this.loading.present()
 
@@ -108,82 +121,173 @@ export class ProfilePage implements OnInit {
     this.token = token.value
     this.id = id.value
     this.header = new HttpHeaders().append('Authorization', `Bearer ${this.token}`)
-    this.fetchProfileData(() => {
+
+    this.fetchAllData(() => {
       this.loading.dismiss(null, 'cancel')
-    })
+    }) 
   }
 
   handleScroll(event: any) {
-    
+    if (this.segment === 'posts') {
+      this.fetchTweets(()=>{
+        this.offsetTweet += this.limit
+        event?.target.complete()
+      })
+    } 
+
+    if (this.segment === 'replies') {
+      this.fetchReplies(()=>{
+        this.offsetReply += this.limit
+        event?.target.complete()
+      })
+    }
+
+    if (this.segment === 'likes') {
+      this.fetchLiked(()=>{
+        this.offsetLiked += this.limit
+        event?.target.complete()
+      })
+    }
   }
 
-  // end es el codigo que se ejecuta una vez se hayan obtenido todos los datos del perfil
-  fetchProfileData(end: Function) {
-    // tweets del usuario
-    this.http.get(env.api + `users/${this.id}/tweets`, { headers: this.header })
+  handleFollowingScroll(event:any) {
+    this.fetchFollowing(()=>{
+      this.offsetFollowing += this.limit
+      event?.target.complete()
+    })
+  }
+
+  handleFollowerScroll(event: any){
+    this.fetchFollowers(()=>{
+      this.offsetFollower += this.limit
+      event?.target.complete()
+    })
+  }
+
+  fetchAllData(end: Function){
+    this.fetchTweets(()=>{
+      this.offsetTweet += this.limit
+    })
+    this.fetchReplies(()=>{
+      this.offsetReply += this.limit
+    })
+    this.fetchLiked(()=>{
+      this.offsetLiked += this.limit
+    })
+    this.fetchFollowers(()=>{
+      this.offsetFollower += this.limit
+    })
+    this.fetchFollowing(()=>{
+      this.offsetFollowing += this.limit
+    })
+
+    this.fetchUser(end)
+  }
+
+  fetchTweets(success: Function){
+    this.http.get(env.api + `users/${this.id}/tweets?offset=${this.offsetTweet}&limit=${this.limit}`, { headers: this.header })
+    .subscribe((data: any) => {
+      this.tweets = [...this.tweets, ...data];
+
+      if (this.tweets.length === 0) {
+        this.noDataTweets = true;
+      }
+
+      success()
+    }, async (err: any) => {
+      this.loading.dismiss(null, 'cancel')
+      const alert = await this.createAlert('Failure', err.error.msg)
+      alert.present()
+    })
+  }
+
+  fetchReplies(success: Function){
+    this.http.get(env.api + `users/${this.id}/comments?offset=${this.offsetReply}&limit=${this.limit}`, { headers: this.header })
       .subscribe((data: any) => {
-
-        this.tweets = data;
-
-        if (this.tweets.length === 0) {
-          this.noDataTweets = true;
-        }
-      })
-
-    // comentarios del usuario
-    this.http.get(env.api + `users/${this.id}/comments`, { headers: this.header })
-      .subscribe((data: any) => {
-
-        this.replies = data;
+        this.replies = [...this.replies, ...data];
 
         if (this.replies.length === 0) {
           this.noDataReplies = true;
         }
-      })
 
-    // tweets con like del usuario
-    this.http.get(env.api + `users/${this.id}/tweets/liked`, { headers: this.header })
-      .subscribe((data: any) => {
-
-        this.likes = data;
-
-        if (this.likes.length === 0) {
-          this.noDataLikes = true;
-        }
-      })
-
-    // seguidores
-    this.http.get(env.api + `users/${this.id}/followers`, { headers: this.header })
-      .subscribe((data: any) => {
-        this.followers = data;
-      })
-
-    // seguidos
-    this.http.get(env.api + `users/${this.id}/followings`, { headers: this.header })
-      .subscribe((data: any) => {
-        this.following = data;
-        end();
-      })
-
-    // datos del usuario
-    this.http.get(env.api + `users/${this.id}`, { headers: this.header })
-      .subscribe((data: any) => {
-        this.user = data
-
-        // actualizando datos del formulario de editar perfil
-        const { first_name, last_name, biography } = data
-        const { controls } = this.editProfileForm
-
-        controls['firstName'].setValue(first_name)
-        controls['lastName'].setValue(last_name)
-        controls['bio'].setValue(biography)
-
-        end()
+        success()
+      }, async (err: any) => {
+        this.loading.dismiss(null, 'cancel')
+        const alert = await this.createAlert('Failure', err.error.msg)
+        alert.present()
       })
   }
 
+  fetchLiked(success: Function){
+    this.http.get(env.api + `users/${this.id}/tweets/liked?offset=${this.offsetLiked}&limit=${this.limit}`, { headers: this.header })
+    .subscribe((data: any) => {
+      this.likes = [...this.likes, ...data];
+
+      if (this.likes.length === 0) {
+        this.noDataLikes = true;
+      }
+
+      success()
+    }, async (err: any) => {
+      this.loading.dismiss(null, 'cancel')
+      const alert = await this.createAlert('Failure', err.error.msg)
+      alert.present()
+    })
+  }
+
+  fetchFollowers(success: Function){
+    this.http.get(env.api + `users/${this.id}/followers?offset=${this.offsetLiked}&limit=${this.limit}`, { headers: this.header })
+      .subscribe((data: any) => {
+        this.followers = [...this.followers, ...data];
+        success()
+      }, async (err: any) => {
+        this.loading.dismiss(null, 'cancel')
+        const alert = await this.createAlert('Failure', err.error.msg)
+        alert.present()
+      })
+  }
+
+  fetchFollowing(success: Function){
+    this.http.get(env.api + `users/${this.id}/followings?offset=${this.offsetLiked}&limit=${this.limit}`, { headers: this.header })
+      .subscribe((data: any) => {
+        this.following = [...this.following, ...data];
+        success()
+      }, async (err: any) => {
+        this.loading.dismiss(null, 'cancel')
+        const alert = await this.createAlert('Failure', err.error.msg)
+        alert.present()
+      })
+  }
+
+  fetchUser(end: Function){
+    this.http.get(env.api + `users/${this.id}`, { headers: this.header })
+    .subscribe((data: any) => {
+      this.user = data
+      // actualizando datos del formulario de editar perfil
+      const { first_name, last_name, biography } = data
+      const { controls } = this.editProfileForm
+      controls['firstName'].setValue(first_name)
+      controls['lastName'].setValue(last_name)
+      controls['bio'].setValue(biography)
+      end()
+    }, async (err: any) => {
+      end()
+      this.loading.dismiss(null, 'cancel')
+      const alert = await this.createAlert('Failure', err.error.msg)
+      alert.present()
+    })
+  }
+
   // se reinician los datos
-  cleanProfileData() {
+  restart() {
+    this.offsetTweet = 0
+    this.offsetReply = 0
+    this.offsetLiked = 0
+    this.offsetFollower = 0
+    this.offsetFollowing = 0
+    this.noDataTweets = false;
+    this.noDataReplies = false;
+    this.noDataLikes = false;
     this.following = [];
     this.followers = [];
     this.tweets = [];
@@ -263,7 +367,7 @@ export class ProfilePage implements OnInit {
             await Preferences.remove({ key: 'token' })
             await Preferences.remove({ key: 'id' })
 
-            this.cleanProfileData()
+            this.restart()
             this.menu.close()
 
             // se redirige al login
@@ -292,6 +396,13 @@ export class ProfilePage implements OnInit {
       biography: controls['bio'].value
     }
 
+    if (controls['password'].value != controls['repeatPassword'].value){
+      const alert = await this.createAlert('Failure', `Passwords don't match.`)
+      alert.present()
+      return
+    }
+
+    // el valor de la clave solo se tomara en cuenta si no esta vacio. De esta manera, el usuario puede elegir no editarla
     if (controls['password'].value != '')
       updatedUser.password = controls['password'].value
 

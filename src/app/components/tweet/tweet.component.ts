@@ -6,6 +6,7 @@ import { Preferences } from '@capacitor/preferences';
 import { ActionSheetController, AlertController, ModalController, IonLoading, IonModal } from '@ionic/angular';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tweet',
@@ -36,6 +37,7 @@ export class TweetComponent implements OnInit {
   user: any
 
   constructor(
+    private router: Router,
     public alertController: AlertController,
     private http: HttpClient,
     public fb: FormBuilder,
@@ -104,6 +106,12 @@ export class TweetComponent implements OnInit {
   }
 
   openModalProfile() {
+    // si se trata del perfil del mismo usuario
+    if (this.tweet.user_id == this.id){
+      this.router.navigate(['/tab-inicial/profile']);
+      return
+    }
+
     this.modalController
       .create({
         component: UserProfileComponent,
