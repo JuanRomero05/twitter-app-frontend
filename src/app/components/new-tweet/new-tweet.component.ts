@@ -5,7 +5,6 @@ import { Preferences } from '@capacitor/preferences';
 import { ActionSheetController, AlertController, IonModal } from '@ionic/angular';
 import { environment as env } from 'src/environments/environment';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { Filesystem, Directory } from '@capacitor/filesystem';
 
 @Component({
   selector: 'app-new-tweet',
@@ -20,6 +19,7 @@ export class NewTweetComponent implements OnInit {
   token: string | null = ''
   id: string | null = ''
   header: HttpHeaders = new HttpHeaders()
+  imageUrl: string | undefined;
 
   constructor(
     public fb: FormBuilder,
@@ -87,17 +87,21 @@ export class NewTweetComponent implements OnInit {
 
     //Validando que la imagen exista
     if (image) {
-      this.savePhoto(image.base64String!)
+      this.imageUrl = image.webPath;
     }
   }
 
-  async savePhoto(photo: string) {
+  deletePhoto() {
+    this.imageUrl = undefined;
+  }
+
+  /* async savePhoto(photo: string) {
     await Filesystem.writeFile({
       path: 'test.jpg',
       data: photo,
       directory: Directory.Documents,
     });
-  }
+  } */
 
   async setOpen(value: boolean) {
     if (value) {

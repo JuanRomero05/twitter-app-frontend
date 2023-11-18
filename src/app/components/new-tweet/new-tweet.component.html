@@ -17,35 +17,55 @@
               [disabled]="!newTweetForm.get('newTweet')?.value"
               [strong]="true"
               (click)="createTweet()"
-              >Post</ion-button
             >
+              Post
+            </ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <ion-content class="ion-padding">
-        <form [formGroup]="newTweetForm">
-          <ion-item>
-            <div class="icons-container">
-              <ion-icon
-                name="camera-outline"
-                color="primary"
-                class="iconCamera"
-              ></ion-icon>
-              <ion-icon
-                name="images-outline"
-                color="primary"
-                class="iconImages"
-                (click)="gallery()"
-              ></ion-icon>
-            </div>
-            <ion-textarea
-              formControlName="newTweet"
-              placeholder="What's happening?"
-              [counter]="true"
-              maxlength="280"
-            ></ion-textarea>
-          </ion-item>
-        </form>
+      <ion-content>
+        <ion-card>
+          <ion-card-content>
+            <form [formGroup]="newTweetForm">
+              <ion-item>
+                <div class="icons-container">
+                  <ion-icon
+                    name="images-outline"
+                    color="primary"
+                    (click)="gallery()"
+                  ></ion-icon>
+                </div>
+                <ion-textarea
+                  formControlName="newTweet"
+                  placeholder="What's happening?"
+                  [counter]="true"
+                  maxlength="280"
+                ></ion-textarea>
+              </ion-item>
+            </form>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card *ngIf="imageUrl != undefined">
+          <ion-card-content>
+            <ion-col size="12">
+              <div class="ion-text-end">
+                <a (click)="deletePhoto()">
+                  <ion-icon
+                   name="close-circle"
+                   color="danger"
+                   size="large" 
+                  ></ion-icon>
+                </a>
+              </div>
+              <ion-list >
+                <ion-item>
+                  <img [src]="imageUrl" alt="tweetImage">
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-card-content>
+        </ion-card>
       </ion-content>
     </ng-template>
   </ion-modal>
