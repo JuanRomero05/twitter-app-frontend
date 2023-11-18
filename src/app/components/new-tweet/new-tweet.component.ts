@@ -89,6 +89,9 @@ export class NewTweetComponent implements OnInit {
     if (image) {
       this.imageUrl = image.webPath;
     }
+
+    
+    
   }
 
   deletePhoto() {
