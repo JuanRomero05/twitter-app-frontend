@@ -5,6 +5,9 @@ import { Preferences } from '@capacitor/preferences';
 import { ActionSheetController, AlertController, IonModal } from '@ionic/angular';
 import { environment as env } from 'src/environments/environment';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { getDownloadURL, ref, uploadString } from 'firebase/storage'
+import { storage } from 'src/firebase/config'
+import { v4 } from 'uuid'
 
 @Component({
   selector: 'app-new-tweet',
@@ -19,7 +22,10 @@ export class NewTweetComponent implements OnInit {
   token: string | null = ''
   id: string | null = ''
   header: HttpHeaders = new HttpHeaders()
-  imageUrl: string | undefined;
+  imageData: string | undefined;
+  imageFormat: string | undefined
+  imageDataString: string | undefined;
+  imageUrl: string | undefined
 
   constructor(
     public fb: FormBuilder,
@@ -31,7 +37,9 @@ export class NewTweetComponent implements OnInit {
     this.newTweetForm = this.fb.group({
       'newTweet': new FormControl("", Validators.required),
     });
-
+    this.imageData = ''
+    this.imageFormat = ''
+    this.imageUrl = ''
   }
 
   @ViewChild(IonModal) modal: IonModal;
@@ -56,12 +64,18 @@ export class NewTweetComponent implements OnInit {
   }
 
   createTweet() {
+    this.uploadImage()
     const input = this.newTweetForm.controls['newTweet'].value
 
-    const body = {
+    const body: any = {
       tweet_content: input,
       user_id: this.id
-    }
+    } 
+
+    if (this.imageUrl) 
+      body.image_url = this.imageUrl
+
+    console.log(body.image_url)
 
     this.http.post(env.api + 'tweets', body, { headers: this.header })
       .subscribe(async () => {
@@ -76,23 +90,37 @@ export class NewTweetComponent implements OnInit {
       })
   }
 
+  async uploadImage() {
+    if (!this.imageData) 
+      return
+
+    const storageRef = ref(storage, `twitter-posts/${v4()}.${this.imageFormat}`)
+
+    await uploadString(storageRef, <string> this.imageData, 'data_url')
+
+    const url = await getDownloadURL(storageRef)
+    
+    this.imageUrl = url
+  }
+
   async gallery() {
     Camera.requestPermissions();
     const image = await Camera.getPhoto({
       quality: 90,
       allowEditing: false,
-      resultType: CameraResultType.Uri,
+      resultType: CameraResultType.DataUrl,
       source: CameraSource.Photos
     });
-
     //Validando que la imagen exista
     if (image) {
-      this.imageUrl = image.webPath;
+      this.imageData = image.dataUrl;
+      this.imageFormat = image.format
     }
+
   }
 
   deletePhoto() {
-    this.imageUrl = undefined;
+    this.imageData = undefined;
   }
 
   /* async savePhoto(photo: string) {

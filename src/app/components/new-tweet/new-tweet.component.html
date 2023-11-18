@@ -46,7 +46,7 @@
           </ion-card-content>
         </ion-card>
 
-        <ion-card *ngIf="imageUrl != undefined">
+        <ion-card *ngIf="imageData != undefined">
           <ion-card-content>
             <ion-col size="12">
               <div class="ion-text-end">
@@ -60,7 +60,7 @@
               </div>
               <ion-list >
                 <ion-item>
-                  <img [src]="imageUrl" alt="tweetImage">
+                  <img [src]="imageData" alt="tweetImage">
                 </ion-item>
               </ion-list>
             </ion-col>
