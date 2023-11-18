@@ -63,19 +63,15 @@ export class NewTweetComponent implements OnInit {
     return alert
   }
 
-  createTweet() {
-    this.uploadImage()
+  async createTweet() {
+    await this.uploadImage()
     const input = this.newTweetForm.controls['newTweet'].value
 
     const body: any = {
       tweet_content: input,
-      user_id: this.id
+      user_id: this.id,
+      image_url: this.imageUrl || null
     } 
-
-    if (this.imageUrl) 
-      body.image_url = this.imageUrl
-
-    console.log(body.image_url)
 
     this.http.post(env.api + 'tweets', body, { headers: this.header })
       .subscribe(async () => {
@@ -99,7 +95,7 @@ export class NewTweetComponent implements OnInit {
     await uploadString(storageRef, <string> this.imageData, 'data_url')
 
     const url = await getDownloadURL(storageRef)
-    
+
     this.imageUrl = url
   }
 
